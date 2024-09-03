@@ -11,12 +11,27 @@
                 $.ajax({
                     url: "/get-messages",
                     method: "GET",
+                    data: {room: location.pathname},
                     success: function(data) {
                         $('#messages').empty();
                         
                         data.messages.reverse().forEach(function(message) {
                             $('#messages').append('<h2 class="message">' + message.displayname + message.value + '</h2>');
                         });
+                    }
+                });
+            }
+
+            function new_room(){
+                var room_name = prompt("New Room");
+                
+                $.ajax({
+                    url: "/new-room",
+                    method: "POST",
+                    data: {room_name: room_name},
+                    success: function(response)
+                    {
+                        console.log(response);
                     }
                 });
             }
@@ -30,6 +45,7 @@
                     event.preventDefault(); // Prevent the default form submission
 
                     var formdata = $(this).serialize(); // Serialize form data
+                    formdata += '&room=' + encodeURIComponent(location.pathname);
 
                     $.ajax({
                         url: "/new-message",
@@ -46,6 +62,10 @@
     </head>
 
     <body>
+        <div class="rooms">
+            <a href="/"> Global </a>
+            <button onclick="new_room()"> + </button>
+        </div>
         <a href="/"> Global chat </a>
 
         <form id="poster" method="POST" action="/new-message">
@@ -63,6 +83,30 @@
     </body>
 
     <style>
+        div.rooms
+        {
+            overflow: auto;
+            white-space: nowrap;
+            background-color:darkslategrey;
+            margin-bottom: 50px;
+        }
+        div.rooms a
+        {
+            display: inline-block;
+            text-align: center;
+            padding: 12px;
+            font-size: 200%;
+            color: white;
+        }
+        div.rooms a:hover
+        {
+            background-color: rgb(49, 53, 54);
+        }
+        button
+        {
+            padding: 12px;
+            font-size: 170%;
+        }
         a
         {
             font-size: 250%;

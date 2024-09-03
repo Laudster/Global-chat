@@ -67,6 +67,34 @@
         {
             "value": "Dette er fra mobilen ",
             "displayname": "Laudal: "
+        },
+        {
+            "value": "Enda en liten test",
+            "displayname": "User: "
+        },
+        {
+            "value": "En test",
+            "displayname": "User: "
+        },
+        {
+            "value": null,
+            "displayname": "User: "
+        },
+        {
+            "value": "Er alt fucked?",
+            "displayname": "Amund: "
+        },
+        {
+            "value": "Pr\u00f8ver noe",
+            "displayname": "Amund: "
+        },
+        {
+            "value": "Test",
+            "displayname": "Amund: "
+        },
+        {
+            "value": "Funker?=??",
+            "displayname": "User: "
         }
     ]
 }
