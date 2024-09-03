@@ -3,6 +3,7 @@
 <html>
     <head>
         <title> Global chat </title>
+        <link rel="icon" type="image/x-icon" href="/static/chat.ico">
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="text/javascript">
@@ -45,7 +46,7 @@
     </head>
 
     <body>
-        <h1> Global chat </h1>
+        <a href="/"> Global chat </a>
 
         <form id="poster" method="POST" action="/new-message">
             <input id="display_name" name="display_name" placeholder="Displayname">
@@ -62,6 +63,14 @@
     </body>
 
     <style>
+        a
+        {
+            font-size: 250%;
+            text-decoration: none;
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+        }
         .message
         {
             display: block;
@@ -73,6 +82,7 @@
         }
         #display_name
         {
+            margin-top: 20px;
             margin-bottom: 30px;
         }
     </style>
