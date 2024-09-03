@@ -1,3 +1,3 @@
 # Global chat
 
-Lite prosjekt jeg jobber på i yff timer
+Lite prosjekt jeg jobber på med i yff timer
