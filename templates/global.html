@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title> Global chat </title>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript">
+            function update_page() {
+                $.ajax({
+                    url: "/get-messages",
+                    method: "GET",
+                    success: function(data) {
+                        $('#messages').empty();
+                        
+                        data.messages.reverse().forEach(function(message) {
+                            $('#messages').append('<h2 class="message">' + message.displayname + message.value + '</h2>');
+                        });
+                    }
+                });
+            }
+
+            setInterval(update_page, 5000);
+
+            $(document).ready(function() {
+                update_page();
+
+                $("#poster").on("submit", function(event) {
+                    event.preventDefault(); // Prevent the default form submission
+
+                    var formdata = $(this).serialize(); // Serialize form data
+
+                    $.ajax({
+                        url: "/new-message",
+                        method: "POST",
+                        data: formdata,
+                        success: function(response) {
+                            $("#poster").find("input[type=text], textarea").val('');
+                            update_page();
+                        }
+                    });
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+        <h1> Global chat </h1>
+
+        <form id="poster" method="POST" action="/new-message">
+            <input id="display_name" name="display_name" placeholder="Displayname">
+            <br>
+            <label for="message">Post message:</label><br>
+            <textarea id="message" name="message" rows="4" cols="40" required></textarea><br>
+            <input type="submit" value="Post message">
+        </form>
+
+        <div id="messages" style="margin-top: 50px;">
+            <!-- The messages get added by the script -->
+        </div>
+
+    </body>
+
+    <style>
+        .message
+        {
+            display: block;
+            width: 200px;
+            padding: 5px;
+            border: 2px solid;
+            border-radius: 5px;
+            text-align: center;
+        }
+        #display_name
+        {
+            margin-bottom: 30px;
+        }
+    </style>
+</html>
