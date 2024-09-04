@@ -1,11 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-from urllib.parse import parse_qs
 import json
 import os
 
 app = Flask(__name__)
-
-FILEPATH = "saves/Global.json"
 
 def update_file(file, data):
     file.seek(0)
@@ -17,7 +14,7 @@ def globall():
     messages : str
     display_name = request.args.get("display_name")\
 
-    with open(FILEPATH, "r") as file:
+    with open("saves/Global.json", "r") as file:
         data = json.load(file)
         messages = data["messages"]
 
@@ -37,25 +34,6 @@ def room(room):
     
     return redirect(url_for("globall", display_name=request.args.get("display_name")))
 
-@app.route("/new-message", methods=["POST"])
-def post():
-    message = request.form.get("message")
-    display_name = request.form.get("display_name")
-
-    room = request.form.get("room")
-    room = room[1:len(room)]
-
-    if room == "" or room == "/":
-        room = "Global"
-
-    with open(f"saves/{room}.json", "r+") as file:
-        message_data = json.load(file)
-        if not display_name:
-            display_name = "User"
-        message_data["messages"].append({"value": message, "displayname": display_name+": "})
-        update_file(file, message_data)
-
-    return jsonify()
 
 @app.route("/get-messages", methods=["GET"])
 def get_messages():
@@ -77,6 +55,43 @@ def get_messages():
         message_data = json.load(file)
 
     return jsonify(message_data)
+
+@app.route("/get-rooms", methods=["GET"])
+def get_rooms():
+    data = [os.path.join("saves", f) for f in os.listdir("saves") if os.path.isfile(os.path.join("saves", f))]
+    data = sorted(data, key=lambda x: os.path.getctime(x))
+
+    for i, v in enumerate(data):
+        split = v.split("\\")
+        data[i] = split[len(split) - 1]
+    
+    for i, v in enumerate(data):
+        split = v.split(".")
+        data[i] = split[0]
+
+    data.remove("Global")
+    
+    return data
+
+@app.route("/new-message", methods=["POST"])
+def post():
+    message = request.form.get("message")
+    display_name = request.form.get("display_name")
+
+    room = request.form.get("room")
+    room = room[1:len(room)]
+
+    if room == "" or room == "/":
+        room = "Global"
+
+    with open(f"saves/{room}.json", "r+") as file:
+        message_data = json.load(file)
+        if not display_name:
+            display_name = "User"
+        message_data["messages"].append({"value": message, "displayname": display_name+": "})
+        update_file(file, message_data)
+
+    return jsonify()
 
 @app.route("/new-room", methods=["POST"])
 def new_room():

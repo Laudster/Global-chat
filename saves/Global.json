@@ -95,6 +95,10 @@
         {
             "value": "Funker?=??",
             "displayname": "User: "
+        },
+        {
+            "value": "google: https://www.google.com",
+            "displayname": "User: "
         }
     ]
 }

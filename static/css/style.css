@@ -1,0 +1,46 @@
+div.rooms
+        {
+            overflow: auto;
+            white-space: nowrap;
+            background-color:darkslategrey;
+            margin-bottom: 50px;
+        }
+        div.rooms a
+        {
+            display: inline-block;
+            text-align: center;
+            padding: 12px;
+            font-size: 200%;
+            color: white;
+        }
+        div.rooms a:hover
+        {
+            background-color: rgb(49, 53, 54);
+        }
+        button
+        {
+            padding: 12px;
+            font-size: 170%;
+        }
+        a
+        {
+            font-size: 250%;
+            text-decoration: none;
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+        }
+        .message
+        {
+            display: block;
+            width: 200px;
+            padding: 5px;
+            border: 2px solid;
+            border-radius: 5px;
+            text-align: center;
+        }
+        #display_name
+        {
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
