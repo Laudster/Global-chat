@@ -62,7 +62,7 @@ def get_rooms():
     data = sorted(data, key=lambda x: os.path.getctime(x))
 
     for i, v in enumerate(data):
-        if v.find("\\"):
+        if v.find("\\") != -1:
             split = v.split("\\")
             data[i] = split[len(split) - 1]
         else:
