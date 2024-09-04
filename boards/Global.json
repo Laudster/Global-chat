@@ -99,6 +99,10 @@
         {
             "value": "google: https://www.google.com",
             "displayname": "User: "
+        },
+        {
+            "value": "Dette begynner \u00e5 bli en sv\u00e6rt lang thread",
+            "displayname": "Amund: "
         }
     ]
 }
