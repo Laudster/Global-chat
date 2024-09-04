@@ -44,7 +44,7 @@ def get_messages():
     room = room[1:len(room)]
 
     if room == "/" or room == "":
-        room = "global"
+        room = "Global"
     elif os.path.exists(f"{boards}/{room}.json") == True:
         with open(f"{boards}/{room}.json", "r") as file:
             message_data = json.load(file)
@@ -62,8 +62,12 @@ def get_rooms():
     data = sorted(data, key=lambda x: os.path.getctime(x))
 
     for i, v in enumerate(data):
-        split = v.split("\\")
-        data[i] = split[len(split) - 1]
+        if v.find("\\"):
+            split = v.split("\\")
+            data[i] = split[len(split) - 1]
+        else:
+            split = v.split("/")
+            data[i] = split[len(split) - 1]
     
     for i, v in enumerate(data):
         split = v.split(".")
