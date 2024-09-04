@@ -18,11 +18,20 @@ function get_rooms(){
         url: "/get-rooms",
         method: "GET",
         success: function(data){
-            $("#rooms").append('<a href="/" > Global </a>')
+            if (location.pathname.split("/")[1] == ""){
+                $("#rooms").append('<a style="background-color: rgb(49, 53, 54);" href="/" > Global </a>')
+            } else{
+                $("#rooms").append('<a href="/" > Global </a>')
+            }
+            
             data.forEach(function(room){
-                $("#rooms").append('<a href=' + room + '>' + room + '</a>')
+                if (location.pathname.split("/")[1] == room){
+                    $("#rooms").append('<a style="background-color: rgb(49, 53, 54);" href=' + room + '>' + room + '</a>');
+                } else{
+                    $("#rooms").append('<a href=' + room + '>' + room + '</a>');
+                }
             });
-            $("#rooms").append('<button onclick="new_room()"> + </button>')
+            $("#rooms").append('<button onclick="new_room()"> + </button>');
         }
     });
 }
