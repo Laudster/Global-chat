@@ -4,6 +4,8 @@ import os
 
 app = Flask(__name__)
 
+boards = "boards"
+
 def update_file(file, data):
     file.seek(0)
     file.truncate()
@@ -14,7 +16,7 @@ def globall():
     messages : str
     display_name = request.args.get("display_name")\
 
-    with open("saves/Global.json", "r") as file:
+    with open(f"{boards}/Global.json", "r") as file:
         data = json.load(file)
         messages = data["messages"]
 
@@ -22,11 +24,11 @@ def globall():
 
 @app.route("/<room>")
 def room(room):
-    if os.path.exists(f"saves/{room}.json"):
+    if os.path.exists(f"{boards}/{room}.json"):
         messages : str
         display_name = request.args.get("display_name")
 
-        with open(f"saves/{room}.json", "r") as file:
+        with open(f"{boards}/{room}.json", "r") as file:
             data = json.load(file)
             messages = data["messages"]
 
@@ -43,22 +45,20 @@ def get_messages():
 
     if room == "/" or room == "":
         room = "global"
-    elif os.path.exists(f"saves/{room}.json") == True:
-        messages : str
-
-        with open(f"saves/{room}.json", "r") as file:
+    elif os.path.exists(f"{boards}/{room}.json") == True:
+        with open(f"{boards}/{room}.json", "r") as file:
             message_data = json.load(file)
 
         return jsonify(message_data)
 
-    with open(f"saves/{room}.json", "r") as file:
+    with open(f"{boards}/{room}.json", "r") as file:
         message_data = json.load(file)
 
     return jsonify(message_data)
 
 @app.route("/get-rooms", methods=["GET"])
 def get_rooms():
-    data = [os.path.join("saves", f) for f in os.listdir("saves") if os.path.isfile(os.path.join("saves", f))]
+    data = [os.path.join(boards, f) for f in os.listdir(boards) if os.path.isfile(os.path.join(boards, f))]
     data = sorted(data, key=lambda x: os.path.getctime(x))
 
     for i, v in enumerate(data):
@@ -84,7 +84,7 @@ def post():
     if room == "" or room == "/":
         room = "Global"
 
-    with open(f"saves/{room}.json", "r+") as file:
+    with open(f"{boards}/{room}.json", "r+") as file:
         message_data = json.load(file)
         if not display_name:
             display_name = "User"
@@ -97,12 +97,12 @@ def post():
 def new_room():
     room_name = request.form.get("room_name")
 
-    if not os.path.exists("saves/" + room_name + ".json"):
-        with open("saves/" + room_name + ".json", "w") as file:
+    if not os.path.exists(f"{boards}/" + room_name + ".json"):
+        with open(f"{boards}/{room_name}.json", "w") as file:
             data = {"messages": []}
             json.dump(data, file, indent=4)
     
-    return jsonify()
+    return room_name
 
 
 if __name__ == "__main__":

@@ -39,18 +39,20 @@ function get_rooms(){
 function new_room(){
     var room_name = prompt("New Room");
 
-    if (room_name.search(" ") != -1){
-        alert("Room name may not contain spaces");
-    } else{
-            $.ajax({
-            url: "/new-room",
-            method: "POST",
-            data: {room_name: room_name},
-            success: function(response)
-            {
-                location.reload();
-            }
-        });
+    if (room_name){
+        if (room_name.search(" ") != -1){
+            alert("Room name may not contain spaces");
+        } else{
+                $.ajax({
+                url: "/new-room",
+                method: "POST",
+                data: {room_name: room_name},
+                success: function(response)
+                {
+                    window.location.replace("/" + room_name);
+                }
+            });
+        }
     }
 }
 

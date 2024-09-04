@@ -1,0 +1,16 @@
+{
+    "messages": [
+        {
+            "value": "This is the first message in the newest board",
+            "displayname": "Amund: "
+        },
+        {
+            "value": "Tester lenker: google.com",
+            "displayname": "Skaperen: "
+        },
+        {
+            "value": "Sjekker at ting ikke kan g\u00e5 ut av frame, fordi det ville v\u00e6rt veldig kjedelig",
+            "displayname": "Skaperen: "
+        }
+    ]
+}
