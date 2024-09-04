@@ -1,3 +1,3 @@
 # Global chat
 
-Lite prosjekt jeg jobber på med
+Lite prosjekt jeg jobber med
