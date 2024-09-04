@@ -7,6 +7,14 @@
         {
             "value": "Jeg er et geni",
             "displayname": "10x programmer: "
+        },
+        {
+            "value": "Tester om event fugnerer",
+            "displayname": "Anon: "
+        },
+        {
+            "value": "test",
+            "displayname": "Anon: "
         }
     ]
 }

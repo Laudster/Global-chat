@@ -7,7 +7,7 @@ function update_page() {
             $('#messages').empty();
             
             data.messages.reverse().forEach(function(message) {
-                $('#messages').append('<h2 class="message">' + message.displayname + message.value + '</h2>');
+                $('#messages').append('<h2 style="margin-bottom: 20px;" class="message">' + message.displayname + message.value + '</h2>');
             });
         }
     });
@@ -85,5 +85,26 @@ $(document).ready(function() {
                 update_page();
             }
         });
+    });
+
+    var form = document.getElementById("poster");
+    var textarea = document.getElementById("message");
+
+    textarea.addEventListener("keydown", function(event){
+        if (event.key == "Enter" && !event.shiftKey){
+            event.preventDefault();
+            var formdata = $(this).serialize(); // Serialize form data
+        formdata += '&room=' + encodeURIComponent(location.pathname);
+
+        $.ajax({
+            url: "/new-message",
+            method: "POST",
+            data: formdata,
+            success: function(response) {
+                $("#poster").find("input[type=text], textarea").val('');
+                update_page();
+            }
+        });
+        }
     });
 });

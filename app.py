@@ -91,7 +91,7 @@ def post():
     with open(f"{boards}/{room}.json", "r+") as file:
         message_data = json.load(file)
         if not display_name:
-            display_name = "User"
+            display_name = "Anon"
         message_data["messages"].append({"value": message, "displayname": display_name+": "})
         update_file(file, message_data)
 
@@ -110,5 +110,5 @@ def new_room():
 
 
 if __name__ == "__main__":
-    #app.run(debug=False, host="0.0.0.0") public
+    #app.run(debug=False, host="0.0.0.0") # public
     app.run(debug=True) # debug
