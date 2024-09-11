@@ -21,10 +21,12 @@ function update_page() {
                     let er_lenke = false;
 
                     for (const domene of domener){
-                        if (cut.search(domene) != -1){
+                        if (cut.includes(domene)){
                             console.log(cut);
+                            console.log(domene);
                             er_lenke = true;
                             domenet = domene;
+                            break;
                         }
                     }
 
@@ -33,12 +35,12 @@ function update_page() {
 
                         if (cut.search("//") != - 1){
                             if (cut.search("www.")){
-                                content += '<a target="_blank" href=' + cut + ' >' + cut_text.split("//")[1].split("www.")[1] + ' </a>';
+                                content += '<a title=' + cut + ' target="_blank" href=' + cut + ' >' + cut_text.split("//")[1].split("www.")[1] + ' </a>';
                             } else{
-                                content += '<a target="_blank" href=' + cut + ' >' + cut_text.split("//")[1] + ' </a>';
+                                content += '<a title=' + cut + ' target="_blank" href=' + cut + ' >' + cut_text.split("//")[1] + ' </a>';
                             }
                         } else{
-                            content += '<a target="_blank" href=' + "https://" + cut + ' >' + cut_text + ' </a>';
+                            content += '<a title=' + cut + ' target="_blank" href=' + "https://" + cut + ' >' + cut_text + ' </a>';
                         }
                     } else{
                         content += cut_text + " ";
