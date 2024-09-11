@@ -9,6 +9,7 @@ div.rooms a
 {
     display: inline-block;
     text-align: center;
+    text-decoration: none;
     padding: 12px;
     font-size: 200%;
     color: white;
@@ -26,7 +27,7 @@ button
     padding: 12px;
     font-size: 170%;
 }
-a
+#title
 {
     font-size: 250%;
     text-decoration: none;

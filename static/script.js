@@ -7,7 +7,47 @@ function update_page() {
             $('#messages').empty();
             
             data.messages.reverse().forEach(function(message) {
-                $('#messages').append('<h2 style="margin-bottom: 20px;" class="message">' + message.displayname + message.value + '</h2>');
+                let content = '<h2 style="margin-bottom: 20px;" class="message">' + message.displayname;
+
+                const splits = message.value.split(" ");
+                
+                for (let i = 0; i < splits.length; i++){
+                    let cut = splits[i];
+                    let cut_text = cut;
+
+                    const domener = [".com", ".no", ".net", ".org", ".co", ".us", ".io", ".gg", ".ai", ".gov", ".info", ".se", ".de", ".edu", ".mil", ".eu"];
+                    let domenet;
+
+                    let er_lenke = false;
+
+                    for (const domene of domener){
+                        if (cut.search(domene) != -1){
+                            console.log(cut);
+                            er_lenke = true;
+                            domenet = domene;
+                        }
+                    }
+
+                    if (er_lenke == true){
+                        cut_text = cut.split(domenet)[0];
+
+                        if (cut.search("//") != - 1){
+                            if (cut.search("www.")){
+                                content += '<a target="_blank" href=' + cut + ' >' + cut_text.split("//")[1].split("www.")[1] + ' </a>';
+                            } else{
+                                content += '<a target="_blank" href=' + cut + ' >' + cut_text.split("//")[1] + ' </a>';
+                            }
+                        } else{
+                            content += '<a target="_blank" href=' + "https://" + cut + ' >' + cut_text + ' </a>';
+                        }
+                    } else{
+                        content += cut_text + " ";
+                    }
+                }
+
+                content += '</h2>'
+
+                $('#messages').append(content);
             });
         }
     });

@@ -77,10 +77,6 @@
             "displayname": "User: "
         },
         {
-            "value": null,
-            "displayname": "User: "
-        },
-        {
             "value": "fungerer?",
             "displayname": "Amund: "
         },
@@ -102,6 +98,22 @@
         },
         {
             "value": "Dette begynner \u00e5 bli en sv\u00e6rt lang thread",
+            "displayname": "Amund: "
+        },
+        {
+            "value": "Fungerer ting fortsatt?",
+            "displayname": "Amund: "
+        },
+        {
+            "value": "Tester om denne: https://www.w3schools.com/jsref/jsref_search.asp lenken fungerer",
+            "displayname": "Amund: "
+        },
+        {
+            "value": "Denne her https://www.microsoft365.com/?auth=2&home=1 er egentlig en ganske lang lenke",
+            "displayname": "Anon: "
+        },
+        {
+            "value": "Regjeringen : https://www.regjeringen.no/no/id4/",
             "displayname": "Amund: "
         }
     ]

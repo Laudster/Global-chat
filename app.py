@@ -34,7 +34,7 @@ def room(room):
 
         return render_template("global.html", messages=messages, displayer=display_name)
     
-    return redirect(url_for("globall", display_name=request.args.get("display_name")))
+    return redirect(url_for("globall"))
 
 
 @app.route("/get-messages", methods=["GET"])

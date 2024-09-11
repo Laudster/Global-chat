@@ -17,7 +17,7 @@
         <div  class="center""><a id="title" href="/"> Global chat </a></div>
 
         <form  class="center"" id="poster" method="POST" action="/new-message">
-            <input id="display_name" name="display_name" placeholder="Displayname">
+            <input id="display_name" name="display_name" placeholder="Displayname" autocomplete="off">
             <br>
             <label for="message">Post message:</label><br>
             <textarea id="message" name="message" rows="4" cols="40" required></textarea><br>
@@ -25,7 +25,7 @@
         </form>
 
         <div id="messages" style="margin-top: 50px;">
-            <!-- The messages get added by the script -->
+            <!-- Meldinger blir lagt til av script
         </div>
     </body>
 </html>
