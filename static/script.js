@@ -63,7 +63,7 @@ function update_page() {
 }
 
 function situation_update(){
-    if (document.getElementById("messages").children > 0){
+    if (document.getElementById("messages").childElementCount > 0){
         $.ajax({
             url: "/get-situation",
             method: "GET",

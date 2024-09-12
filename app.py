@@ -20,7 +20,7 @@ def globall():
         data = json.load(file)
         messages = data["messages"]
 
-    return render_template("global.html", messages=messages, displayer=display_name)
+    return render_template("global.html", messages=messages, displayer=display_name, title="Global")
 
 @app.route("/<room>")
 def room(room):
@@ -32,7 +32,7 @@ def room(room):
             data = json.load(file)
             messages = data["messages"]
 
-        return render_template("global.html", messages=messages, displayer=display_name)
+        return render_template("global.html", messages=messages, displayer=display_name, title=room)
     
     return redirect(url_for("globall"))
 
@@ -48,8 +48,8 @@ def situation_report():
     with open(f"{boards}/{room}.json", "r") as file:
         data = json.load(file)["messages"]
 
-        if newest_message.split(": ")[1] != data[len(data) - 1].get("value"):
-            return jsonify(True)
+        if newest_message.split(": ")[1].replace(" ", "") != data[len(data) - 1].get("value").replace(" ", ""):
+            return jsonify(True)    
 
     return jsonify(False)
 
