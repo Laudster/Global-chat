@@ -8,6 +8,7 @@ function update_page() {
             
             data.messages.reverse().forEach(function(message) {
                 let content = '<h2 style="margin-bottom: 20px;" class="message">' + message.displayname;
+                let image = "";
 
                 const splits = message.value.split(" ");
                 
@@ -45,14 +46,7 @@ function update_page() {
                     }
 
                     if (cut_text[0] == "@"){
-                        $.ajax({
-                            url: "/get-image",
-                            data: {filename: cut_text.split("@")[1]},
-                            method: "GET",
-                            success: function(data){
-                                $('#messages').append('<img src=' + data + '>');
-                            }
-                        });
+                        image = cut_text.split("@")[1];
                     }
 
                 }
@@ -60,6 +54,9 @@ function update_page() {
                 content += '</h2>'
 
                 $('#messages').append(content);
+                if (image != ""){
+                    $('#messages').append('<img src="/get-image?filename=' + image + '">');
+                }
             });
         }
     });

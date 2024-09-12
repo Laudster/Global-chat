@@ -60,7 +60,6 @@ def get_messages():
 def get_image():
     filename : str
     filename = str(request.args.get("filename"))
-    filename = "images.jpg"
 
     return send_file(os.path.join("Images", filename), mimetype="image/jpeg")
 
@@ -99,7 +98,9 @@ def post():
         image = request.files.get("image")
             
         image.save(os.path.join("Images", image.filename))
-        image_name += "@" + image.filename
+        print(image.filename.replace(" ", ""))
+        os.rename(f"Images/{image.filename}", f"Images/{image.filename.replace(" ", "")}")
+        image_name += " @" + image.filename.replace(" ", "")
             
     except:
         pass # No Image
