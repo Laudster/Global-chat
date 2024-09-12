@@ -22,8 +22,6 @@ function update_page() {
 
                     for (const domene of domener){
                         if (cut.includes(domene)){
-                            console.log(cut);
-                            console.log(domene);
                             er_lenke = true;
                             domenet = domene;
                             break;
@@ -42,9 +40,21 @@ function update_page() {
                         } else{
                             content += '<a title=' + cut + ' target="_blank" href=' + "https://" + cut + ' >' + cut_text + ' </a>';
                         }
-                    } else{
+                    } else if (cut_text[0] != "@"){
                         content += cut_text + " ";
                     }
+
+                    if (cut_text[0] == "@"){
+                        $.ajax({
+                            url: "/get-image",
+                            data: {filename: cut_text.split("@")[1]},
+                            method: "GET",
+                            success: function(data){
+                                $('#messages').append('<img src=' + data + '>');
+                            }
+                        });
+                    }
+
                 }
 
                 content += '</h2>'
@@ -112,16 +122,19 @@ $(document).ready(function() {
         title.textContent = location.pathname.split("/")[1] + " chat"
     }
 
-    $("#poster").on("submit", function(event) {
-        event.preventDefault(); // Prevent the default form submission
 
-        var formdata = $(this).serialize(); // Serialize form data
-        formdata += '&room=' + encodeURIComponent(location.pathname);
+    $("#poster").on("submit", function(event) {
+        event.preventDefault();
+
+        var formdata = new FormData(this);
+        formdata.append('room', location.pathname);
 
         $.ajax({
             url: "/new-message",
             method: "POST",
             data: formdata,
+            processData: false,
+            contentType: false,
             success: function(response) {
                 $("#poster").find("input[type=text], textarea").val('');
                 update_page();
@@ -129,7 +142,6 @@ $(document).ready(function() {
         });
     });
 
-    var form = document.getElementById("poster");
     var textarea = document.getElementById("message");
 
     textarea.addEventListener("keydown", function(event){

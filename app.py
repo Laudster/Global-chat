@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, send_file
 import json
 import os
 
@@ -56,6 +56,14 @@ def get_messages():
 
     return jsonify(message_data)
 
+@app.route("/get-image", methods=["GET"])
+def get_image():
+    filename : str
+    filename = str(request.args.get("filename"))
+    filename = "images.jpg"
+
+    return send_file(os.path.join("Images", filename), mimetype="image/jpeg")
+
 @app.route("/get-rooms", methods=["GET"])
 def get_rooms():
     data = [os.path.join(boards, f) for f in os.listdir(boards) if os.path.isfile(os.path.join(boards, f))]
@@ -85,6 +93,17 @@ def post():
     room = request.form.get("room")
     room = room[1:len(room)]
 
+    image_name = ""
+
+    try:
+        image = request.files.get("image")
+            
+        image.save(os.path.join("Images", image.filename))
+        image_name += "@" + image.filename
+            
+    except:
+        pass # No Image
+
     if room == "" or room == "/":
         room = "Global"
 
@@ -92,7 +111,7 @@ def post():
         message_data = json.load(file)
         if not display_name:
             display_name = "Anon"
-        message_data["messages"].append({"value": message, "displayname": display_name+": "})
+        message_data["messages"].append({"value": message + image_name, "displayname": display_name+": "})
         update_file(file, message_data)
 
     return jsonify()
