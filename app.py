@@ -37,6 +37,22 @@ def room(room):
     return redirect(url_for("globall"))
 
 
+@app.route("/get-situation")
+def situation_report():
+    newest_message = request.args.get("newest_message")
+    room = request.args.get("room")
+
+    if room == "/": room = "Global"
+    
+
+    with open(f"{boards}/{room}.json", "r") as file:
+        data = json.load(file)["messages"]
+
+        if newest_message.split(": ")[1] != data[len(data) - 1].get("value"):
+            return jsonify(True)
+
+    return jsonify(False)
+
 @app.route("/get-messages", methods=["GET"])
 def get_messages():
     room = request.args.get("room")
@@ -98,7 +114,6 @@ def post():
         image = request.files.get("image")
             
         image.save(os.path.join("Images", image.filename))
-        print(image.filename.replace(" ", ""))
         os.rename(f"Images/{image.filename}", f"Images/{image.filename.replace(" ", "")}")
         image_name += " @" + image.filename.replace(" ", "")
             

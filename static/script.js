@@ -62,6 +62,21 @@ function update_page() {
     });
 }
 
+function situation_update(){
+    if (document.getElementById("messages").children > 0){
+        $.ajax({
+            url: "/get-situation",
+            method: "GET",
+            data: {newest_message: document.getElementById("messages").firstElementChild.innerHTML, room: location.pathname},
+            success: function(data){
+                if (data == true){
+                    update_page();
+                }
+            }
+        });
+    }
+}
+
 function get_rooms(){
     $.ajax({
         url: "/get-rooms",
@@ -105,7 +120,7 @@ function new_room(){
     }
 }
 
-setInterval(update_page, 5000);
+setInterval(situation_update, 1000);
 
 $(document).ready(function() {
     get_rooms();
