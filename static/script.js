@@ -17,23 +17,21 @@ function update_page() {
                     let cut_text = cut;
 
                     const domener = [".com", ".no", ".net", ".org", ".co", ".us", ".io", ".gg", ".ai", ".gov", ".info", ".se", ".de", ".edu", ".mil", ".eu"];
-                    let domenet;
-
-                    let er_lenke = false;
+                    let domenet = "";
 
                     for (const domene of domener){
                         if (cut.includes(domene)){
-                            er_lenke = true;
                             domenet = domene;
                             break;
                         }
                     }
 
-                    if (er_lenke == true){
+                    if (domenet != ""){
                         cut_text = cut.split(domenet)[0];
+                        console.log(cut_text);
 
                         if (cut.search("//") != - 1){
-                            if (cut.search("www.")){
+                            if (cut.search("www.") != -1){
                                 content += '<a title=' + cut + ' target="_blank" href=' + cut + ' >' + cut_text.split("//")[1].split("www.")[1] + ' </a>';
                             } else{
                                 content += '<a title=' + cut + ' target="_blank" href=' + cut + ' >' + cut_text.split("//")[1] + ' </a>';
@@ -45,12 +43,8 @@ function update_page() {
                         content += cut_text + " ";
                     }
 
-                    if (cut_text[0] == "@"){
-                        image = cut_text.split("@")[1];
-                    }
-
+                    if (cut_text[0] == "@") image = cut_text.split("@")[1];
                 }
-
                 content += '</h2>'
 
                 $('#messages').append(content);
@@ -101,7 +95,7 @@ function get_rooms(){
 }
 
 function new_room(){
-    var room_name = prompt("New Room");
+    let room_name = prompt("New Room");
 
     if (room_name){
         if (room_name.search(" ") != -1){
@@ -120,13 +114,32 @@ function new_room(){
     }
 }
 
+function send_message(event){
+    event.preventDefault();
+
+    let formdata = new FormData($("#poster")[0]);
+    formdata.append('room', location.pathname);
+
+    $.ajax({
+        url: "/new-message",
+        method: "POST",
+        data: formdata,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            $("#poster").find("input[type=text], textarea").val('');
+            update_page();
+        }
+    });
+}
+
 setInterval(situation_update, 1000);
 
 $(document).ready(function() {
     get_rooms();
     update_page();
 
-    var title = document.getElementById("title")
+    let title = document.getElementById("title")
     title.href = "#" + location.pathname
     if (location.pathname == "/"){
         title.textContent = "Global chat"
@@ -134,43 +147,11 @@ $(document).ready(function() {
         title.textContent = location.pathname.split("/")[1] + " chat"
     }
 
+    $("#poster").on("submit", event => send_message(event));
 
-    $("#poster").on("submit", function(event) {
-        event.preventDefault();
-
-        var formdata = new FormData(this);
-        formdata.append('room', location.pathname);
-
-        $.ajax({
-            url: "/new-message",
-            method: "POST",
-            data: formdata,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                $("#poster").find("input[type=text], textarea").val('');
-                update_page();
-            }
-        });
-    });
-
-    var textarea = document.getElementById("message");
-
-    textarea.addEventListener("keydown", function(event){
-        if (event.key == "Enter" && !event.shiftKey){
-            event.preventDefault();
-            var formdata = $(this).serialize(); // Serialize form data
-        formdata += '&room=' + encodeURIComponent(location.pathname);
-
-        $.ajax({
-            url: "/new-message",
-            method: "POST",
-            data: formdata,
-            success: function(response) {
-                $("#poster").find("input[type=text], textarea").val('');
-                update_page();
-            }
-        });
+    $("#message").on("keydown", event => {
+        if (event.key == "Enter" && !event.shiftKey) {
+            send_message(event);
         }
     });
 });

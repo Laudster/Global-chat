@@ -43,13 +43,31 @@ def situation_report():
     room = request.args.get("room")
 
     if room == "/": room = "Global"
+
+    split = newest_message.split(": ")
+
+    newest_message = newest_message[len(split[0])+ 2: len(newest_message)]
     
+    newest_message = newest_message.replace(" ", "")
 
     with open(f"{boards}/{room}.json", "r") as file:
         data = json.load(file)["messages"]
+        data_message = data[len(data) - 1].get("value").replace(" ", "")
 
-        if newest_message.split(": ")[1].replace(" ", "") != data[len(data) - 1].get("value").replace(" ", ""):
-            return jsonify(True)    
+        if newest_message != data_message:
+            if "https://" in data_message:
+                print(data_message + "\n\n\n")
+                newest_message = newest_message[0: newest_message.index("<a")] + data_message[data_message.index("https"): len(data_message)]
+                print(data_message + "\n\n\n")
+                print(newest_message + "\n\n\n")
+                if data_message == newest_message:
+                    return jsonify(False)
+            elif len(newest_message) < len(data_message):
+                if data_message[len(newest_message)] == "@":
+                    return jsonify(False)
+
+    
+            return jsonify(True)
 
     return jsonify(False)
 
