@@ -7,48 +7,21 @@ function update_page() {
             $('#messages').empty();
             
             data.messages.reverse().forEach(function(message) {
-                let content = '<h2 style="margin-bottom: 20px;" class="message">' + message.displayname;
+                let ra = message.value
                 let image = "";
 
-                const splits = message.value.split(" ");
-                
-                for (let i = 0; i < splits.length; i++){
-                    let cut = splits[i];
-                    let cut_text = cut;
-
-                    const domener = [".com", ".no", ".net", ".org", ".co", ".us", ".io", ".gg", ".ai", ".gov", ".info", ".se", ".de", ".edu", ".mil", ".eu"];
-                    let domenet = "";
-
-                    for (const domene of domener){
-                        if (cut.includes(domene)){
-                            domenet = domene;
-                            break;
+                if (ra[ra.length] != ">"){
+                    for (let i = ra.length; i >0; i--){
+                        if (ra[i] == "@"){
+                            image = ra.substring(i + 1, ra.length)
+                            ra = ra.substring(0, i - 1);
                         }
                     }
-
-                    if (domenet != ""){
-                        cut_text = cut.split(domenet)[0];
-                        console.log(cut_text);
-
-                        if (cut.search("//") != - 1){
-                            if (cut.search("www.") != -1){
-                                content += '<a title=' + cut + ' target="_blank" href=' + cut + ' >' + cut_text.split("//")[1].split("www.")[1] + ' </a>';
-                            } else{
-                                content += '<a title=' + cut + ' target="_blank" href=' + cut + ' >' + cut_text.split("//")[1] + ' </a>';
-                            }
-                        } else{
-                            content += '<a title=' + cut + ' target="_blank" href=' + "https://" + cut + ' >' + cut_text + ' </a>';
-                        }
-                    } else if (cut_text[0] != "@"){
-                        content += cut_text + " ";
-                    }
-
-                    if (cut_text[0] == "@") image = cut_text.split("@")[1];
                 }
-                content += '</h2>'
 
-                $('#messages').append(content);
+                $('#messages').append(ra);
                 if (image != ""){
+                    console.log(image);
                     $('#messages').append('<img src="/get-image?filename=' + image + '">');
                 }
             });
@@ -61,7 +34,7 @@ function situation_update(){
         $.ajax({
             url: "/get-situation",
             method: "GET",
-            data: {newest_message: document.getElementById("messages").firstElementChild.innerHTML, room: location.pathname},
+            data: {newest_message: document.getElementById("messages").firstElementChild.outerHTML, room: location.pathname},
             success: function(data){
                 if (data == true){
                     update_page();

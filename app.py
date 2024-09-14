@@ -40,33 +40,20 @@ def room(room):
 @app.route("/get-situation")
 def situation_report():
     newest_message = request.args.get("newest_message")
+    newest_message = newest_message.replace(" ", "")
     room = request.args.get("room")
 
     if room == "/": room = "Global"
-
-    split = newest_message.split(": ")
-
-    newest_message = newest_message[len(split[0])+ 2: len(newest_message)]
-    
-    newest_message = newest_message.replace(" ", "")
 
     with open(f"{boards}/{room}.json", "r") as file:
         data = json.load(file)["messages"]
         data_message = data[len(data) - 1].get("value").replace(" ", "")
 
-        if newest_message != data_message:
-            if "https://" in data_message:
-                print(data_message + "\n\n\n")
-                newest_message = newest_message[0: newest_message.index("<a")] + data_message[data_message.index("https"): len(data_message)]
-                print(data_message + "\n\n\n")
-                print(newest_message + "\n\n\n")
-                if data_message == newest_message:
-                    return jsonify(False)
-            elif len(newest_message) < len(data_message):
-                if data_message[len(newest_message)] == "@":
-                    return jsonify(False)
+        data_message = data_message[0: len(newest_message)]
 
-    
+        if newest_message != data_message: 
+            print(newest_message)
+            print(data_message)
             return jsonify(True)
 
     return jsonify(False)
@@ -123,8 +110,42 @@ def post():
     message = request.form.get("message")
     display_name = request.form.get("display_name")
 
+    if display_name == "":
+        display_name = "Anon"
+
     room = request.form.get("room")
     room = room[1:len(room)]
+
+    content = '<h2 style="margin-bottom: 20px;" class="message">' + display_name + ": "
+
+    splits = message.split(" ");
+                
+    for v in splits:
+        cut = v
+        cut_text = cut;
+
+        domener = [".com", ".no", ".net", ".org", ".co", ".us", ".io", ".gg", ".ai", ".gov", ".info", ".se", ".de", ".edu", ".mil", ".eu"];
+        domenet = "";
+
+        for v2 in domener:
+            if v2 in cut:
+                domenet = v2;
+                break;
+
+        if domenet != "":
+            cut_text = cut.split(domenet)[0];
+
+            if "//" in cut:
+                if "www." in cut:
+                    content += '<a title=' + cut + ' target="_blank" href=' + cut + ' >' + cut_text.split("//")[1].split("www.")[1] + ' </a>';
+                else:
+                    content += '<a title=' + cut + ' target="_blank" href=' + cut + ' >' + cut_text.split("//")[1] + ' </a>';
+                
+            else:
+                content += '<a title=' + cut + ' target="_blank" href=' + "https://" + cut + ' >' + cut_text + ' </a>';
+            
+        else:
+            content += cut_text + " ";
 
     image_name = ""
 
@@ -133,7 +154,7 @@ def post():
             
         image.save(os.path.join("Images", image.filename))
         os.rename(f"Images/{image.filename}", f"Images/{image.filename.replace(" ", "")}")
-        image_name += " @" + image.filename.replace(" ", "")
+        image_name += "@" + image.filename.replace(" ", "")
             
     except:
         pass # No Image
@@ -145,7 +166,7 @@ def post():
         message_data = json.load(file)
         if not display_name:
             display_name = "Anon"
-        message_data["messages"].append({"value": message + image_name, "displayname": display_name+": "})
+        message_data["messages"].append({"value": content + "</h2> " + image_name, "displayname": display_name+": "})
         update_file(file, message_data)
 
     return jsonify()
