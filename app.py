@@ -51,9 +51,9 @@ def situation_report():
 
         data_message = data_message[0: len(newest_message)]
 
-        if newest_message != data_message: 
+        if newest_message != data_message:
             print(newest_message)
-            print(data_message)
+            print(data_message, end="\n\n\n\n")
             return jsonify(True)
 
     return jsonify(False)
@@ -137,12 +137,12 @@ def post():
 
             if "//" in cut:
                 if "www." in cut:
-                    content += '<a title=' + cut + ' target="_blank" href=' + cut + ' >' + cut_text.split("//")[1].split("www.")[1] + ' </a>';
+                    content += '<a title="' + cut + '" target="_blank" href="' + cut + '" >' + cut_text.split("//")[1].split("www.")[1] + ' </a>';
                 else:
-                    content += '<a title=' + cut + ' target="_blank" href=' + cut + ' >' + cut_text.split("//")[1] + ' </a>';
+                    content += '<a title="' + cut + '" target="_blank" href="' + cut + '" >' + cut_text.split("//")[1] + ' </a>';
                 
             else:
-                content += '<a title=' + cut + ' target="_blank" href=' + "https://" + cut + ' >' + cut_text + ' </a>';
+                content += '<a title="' + cut + '" target="_blank" href="' + "https://" + cut + '" >' + cut_text + ' </a>';
             
         else:
             content += cut_text + " ";

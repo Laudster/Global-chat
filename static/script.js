@@ -21,7 +21,6 @@ function update_page() {
 
                 $('#messages').append(ra);
                 if (image != ""){
-                    console.log(image);
                     $('#messages').append('<img src="/get-image?filename=' + image + '">');
                 }
             });
@@ -100,7 +99,7 @@ function send_message(event){
         processData: false,
         contentType: false,
         success: function(response) {
-            $("#poster").find("input[type=text], textarea").val('');
+            $("#poster").find("input[type=text], input[type=file], textarea").val('');
             update_page();
         }
     });

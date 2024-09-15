@@ -1,24 +1,5 @@
 {
     "messages": [
-        {
-            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Test: Amund </h2> ",
-            "displayname": "Test: "
-        },
-        {
-            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Amund: Test </h2> ",
-            "displayname": "Amund: "
-        },
-        {
-            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Amund: Test2 </h2> ",
-            "displayname": "Amund: "
-        },
-        {
-            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Amund: Bilde  </h2> @20240914_17h48m38s_grim.png",
-            "displayname": "Amund: "
-        },
-        {
-            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Amund: Bilde 2 </h2> @image.jpeg",
-            "displayname": "Amund: "
-        }
+        
     ]
 }
