@@ -31,6 +31,18 @@
         {
             "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Amund: Bilde test </h2> @Bilde1.jpg",
             "displayname": "Amund: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Amund: Ny melding </h2> ",
+            "displayname": "Amund: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Amund: Ny melding </h2> ",
+            "displayname": "Amund: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Amund: Test socketio </h2> ",
+            "displayname": "Amund: "
         }
     ]
 }

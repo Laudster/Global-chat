@@ -87,12 +87,17 @@ function new_room(){
     }
 }
 
-setInterval(situation_update, 1000);
-
 var socket = io();
 socket.on("connect", function(){
+    document.getElementById("disconnected").hidden = true;
     socket.emit("websocket_event", {data: "connection established"})
 });
+
+socket.on("disconnect", function(){
+    document.getElementById("disconnected").hidden = false;
+});
+
+socket.on("new-message", update_page());
 
 function send_message(event){
     event.preventDefault();

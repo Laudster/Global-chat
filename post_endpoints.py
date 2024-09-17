@@ -1,4 +1,5 @@
 from flask import request, jsonify
+from flask_socketio import emit
 import json
 import os
 
@@ -73,6 +74,7 @@ def post_endpoint():
         
         update_file(file, message_data)
 
+    emit("new-message", json)
     return jsonify()
 
 def new_room_endpoint():

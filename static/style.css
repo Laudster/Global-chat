@@ -14,6 +14,10 @@ div.rooms a
     font-size: 200%;
     color: white;
 }
+#disconnected{
+    font-weight: bold;
+    color: red;
+}
 .center
 {
     text-align: center;
