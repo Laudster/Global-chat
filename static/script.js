@@ -1,4 +1,5 @@
 function update_page() {
+
     $.ajax({
         url: "/get-messages",
         method: "GET",
@@ -6,20 +7,20 @@ function update_page() {
         success: function(data) {
             $('#messages').empty();
             
-            data.messages.reverse().forEach(function(message) {
-                let ra = message.value
+            data.reverse().forEach(function(message) {
+                let message_text = message.value
                 let image = "";
 
-                if (ra[ra.length] != ">"){
-                    for (let i = ra.length; i >0; i--){
-                        if (ra[i] == "@"){
-                            image = ra.substring(i + 1, ra.length)
-                            ra = ra.substring(0, i - 1);
+                if (message_text[message_text.length] != ">"){
+                    for (let i = message_text.length; i >0; i--){
+                        if (message_text[i] == "@"){
+                            image = message_text.substring(i + 1, message_text.length)
+                            message_text = message_text.substring(0, i - 1);
                         }
                     }
                 }
 
-                $('#messages').append(ra);
+                $('#messages').append(message_text);
                 if (image != ""){
                     $('#messages').append('<img src="/get-image?filename=' + image + '">');
                 }
@@ -40,7 +41,7 @@ function situation_update(){
                 }
             }
         });
-    }
+    } else update_page();
 }
 
 function get_rooms(){
