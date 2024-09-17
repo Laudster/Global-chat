@@ -87,6 +87,13 @@ function new_room(){
     }
 }
 
+setInterval(situation_update, 1000);
+
+var socket = io();
+socket.on("connect", function(){
+    socket.emit("websocket_event", {data: "connection established"})
+});
+
 function send_message(event){
     event.preventDefault();
 
@@ -105,8 +112,6 @@ function send_message(event){
         }
     });
 }
-
-setInterval(situation_update, 1000);
 
 $(document).ready(function() {
     get_rooms();

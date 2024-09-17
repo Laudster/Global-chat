@@ -1,12 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, send_file
+from flask import Flask, render_template, request, redirect, url_for
+from flask_socketio import SocketIO
 from post_endpoints import *
 from get_endpoints import *
-import json
-import os
+
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "hemmelig"
+SocketIO = SocketIO(app)
 
-boards = "boards"
+@SocketIO.on("websocket_event")
+def message(data):
+    print(data["data"])
 
 @app.route("/")
 def globall():
@@ -58,5 +62,5 @@ def new_room():
     return new_room_endpoint()
 
 if __name__ == "__main__":
-    #app.run(debug=False, host="0.0.0.0") # public
-    app.run(debug=True) # debug
+    #SocketIO.run(app, debug=False, host="0.0.0.0") # public
+    SocketIO.run(app, debug=True)
