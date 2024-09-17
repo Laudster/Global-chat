@@ -1,8 +1,4 @@
-# Global chat
-
-Lite prosjekt jeg jobber med
-
-
+# Chatbox
 
 Start prosjekt:
 ```Shell
