@@ -43,6 +43,26 @@
         {
             "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Amund: Test socketio </h2> ",
             "displayname": "Amund: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Amund: Tester socketio </h2> ",
+            "displayname": "Amund: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Amund: Vennligst funger </h2> ",
+            "displayname": "Amund: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Amund: Test </h2> ",
+            "displayname": "Amund: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Amund: Test </h2> ",
+            "displayname": "Amund: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Anon: afaf </h2> ",
+            "displayname": "Anon: "
         }
     ]
 }

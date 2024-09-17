@@ -1,7 +1,7 @@
 from flask import request, jsonify
-from flask_socketio import emit
+from flask_socketio import send
 import json
-import os
+import os   
 
 boards = "boards"
 
@@ -10,6 +10,7 @@ def update_file(file, data):
     file.truncate()
     json.dump(data, file, indent=4)
 
+"""
 def post_endpoint():
     message = request.form.get("message")
     display_name = request.form.get("display_name")
@@ -74,8 +75,10 @@ def post_endpoint():
         
         update_file(file, message_data)
 
-    emit("new-message", json)
+    send("new-message")
     return jsonify()
+
+"""
 
 def new_room_endpoint():
     room_name = request.form.get("room_name")

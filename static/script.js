@@ -87,24 +87,35 @@ function new_room(){
     }
 }
 
-var socket = io();
+var socket = io.connect(window.location.origin);
+
+console.log(socket);
+
 socket.on("connect", function(){
     document.getElementById("disconnected").hidden = true;
-    socket.emit("websocket_event", {data: "connection established"})
+    socket.emit("websocket_event", {data: "connection established"}, function(){
+        console.log("suc");
+    }).on("error", function(){
+        console.log("fucked");
+    });
 });
 
 socket.on("disconnect", function(){
     document.getElementById("disconnected").hidden = false;
 });
 
-socket.on("new-message", update_page());
+socket.on("update", update_page);
 
 function send_message(event){
     event.preventDefault();
+        let formdata = new FormData($("#poster")[0]);
+        formdata.append("room", location.pathname)
 
-    let formdata = new FormData($("#poster")[0]);
-    formdata.append('room', location.pathname);
+        socket.emit("new-message", formdata, (response) => {
+            $("#poster").find("input[type=text]", "input[type=file]", "input[type=textarea]").val("")
+        });
 
+    /*
     $.ajax({
         url: "/new-message",
         method: "POST",
@@ -116,6 +127,7 @@ function send_message(event){
             update_page();
         }
     });
+    */
 }
 
 $(document).ready(function() {
