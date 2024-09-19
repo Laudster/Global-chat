@@ -13,7 +13,7 @@ function update_page() {
 
                 if (message_text[message_text.length] != ">"){
                     for (let i = message_text.length; i >0; i--){
-                        if (message_text[i] == "@"){
+                        if (message_text[i] == "|"){
                             image = message_text.substring(i + 1, message_text.length)
                             message_text = message_text.substring(0, i - 1);
                         }
@@ -110,30 +110,31 @@ function send_message(event){
     formdata.append("room", location.pathname);
 
     const data = {};
+    
+    let upload = true;
 
     formdata.forEach((value, key) => {
         if (value instanceof File) {
-            data[key] = value.name
+            console.log(value.size);
+            if (value.size > 5000000){
+                alert("Image is too big, maximum size is 5mb");
+                upload = false;
+            }
+            data[key] = value.name;
         } else {
             data[key] = value;
         }
     });
 
-
-    socket.emit("new-message", data, (response) => {
+    if (upload == true){
+        socket.emit("new-message", data);
         $("#poster")[0].reset();
-    });
 
-    const image = formdata.get("image")
+        const image = formdata.get("image");
 
-    if (image && image.type.startsWith("image/")) {
-        $.ajax({
-            url: "/new-image",
-            method: "POST",
-            data: formdata,
-            processData: false,
-            contentType: false
-        });
+        if (image && image.type.startsWith("image/")) {
+        socket.emit("new-image", {"image": image, "filename": data["image"]});
+        }
     }
 }
 

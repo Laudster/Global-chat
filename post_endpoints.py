@@ -17,10 +17,11 @@ def new_room_endpoint() -> str:
     
     return room_name
 
-def new_image_endpoint() -> str:
-    image = request.files["image"]
-    filename = image.filename.replace(" ", "")
-    image.save(path.join("Images", filename))
+def new_image_endpoint(image) -> str:
+    image_file = image.get("image")
+    filename = image.get("filename").replace(" ", "")
+    with open(f"Images/{filename}", "wb") as file:
+        file.write(image_file)
 
     return "image sent"
 
@@ -68,7 +69,7 @@ def post_endpoint(data, socket) -> str:
 
     try:
         image = data.get("image")
-        image_name += "@" + image.replace(" ", "")
+        image_name += "|" + image.replace(" ", "")
             
     except:
         pass
@@ -84,5 +85,11 @@ def post_endpoint(data, socket) -> str:
         
         update_file(file, message_data)
 
-    socket.emit("update")
+    if image_name == "|":
+        socket.emit("update")
+    else:
+        while not path.exists(f"Images/{image_name[1:len(image_name)]}") == True:
+            pass
+        socket.emit("update")
+
     return "Great success"

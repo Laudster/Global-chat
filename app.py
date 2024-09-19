@@ -5,7 +5,8 @@ from post_endpoints import new_room_endpoint, new_image_endpoint, post_endpoint
 
 app = Flask(__name__)
 #app.config["SECRET_KEY"] = "hemmelig"
-socket = SocketIO(app)
+socket = SocketIO(app, max_http_buffer_size=500000000) #5mb
+
 
 @app.route("/")
 def globall():
@@ -52,9 +53,9 @@ def get_rooms():
 def post(data):
     return post_endpoint(data, socket)
 
-@app.route("/new-image", methods=["POST"])
-def new_image():
-    return new_image_endpoint()
+@socket.on("new-image")
+def new_image(image):
+    return new_image_endpoint(image)
 
 @app.route("/new-room", methods=["POST"])
 def new_room():
