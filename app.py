@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, emit
-from post_endpoints import *
 from get_endpoints import *
-
+from post_endpoints import new_room_endpoint, new_image_endpoint, post_endpoint
 
 app = Flask(__name__)
 #app.config["SECRET_KEY"] = "hemmelig"
@@ -51,69 +50,11 @@ def get_rooms():
 
 @socket.on("new-message")
 def post(data):
-    message = data.get("message")
-    display_name = data.get("display_name", "Anon")
+    return post_endpoint(data, socket)
 
-    room = data.get("room")
-
-    print(f"original: {data} new: {message} {display_name} {room}")
-
-    content = '<h2 style="margin-bottom: 20px;" class="message">' + display_name + ": "
-
-    splits = message.split(" ");
-                
-    for v in splits:
-        cut = v
-        cut_text = cut;
-
-        domener = [".com", ".no", ".net", ".org", ".co", ".us", ".io", ".gg", ".ai", ".gov", ".info", ".se", ".de", ".edu", ".mil", ".eu"];
-        domenet = ""
-
-        for v2 in domener:
-            if v2 in cut:
-                domenet = v2;
-                break;
-
-        if domenet != "":
-            cut_text = cut.split(domenet)[0];
-
-            if "//" in cut:
-                if "www." in cut:
-                    content += '<a title="' + cut + '" target="_blank" href="' + cut + '" >' + cut_text.split("//")[1].split("www.")[1] + ' </a>';
-                else:
-                    content += '<a title="' + cut + '" target="_blank" href="' + cut + '" >' + cut_text.split("//")[1] + ' </a>';
-                
-            else:
-                content += '<a title="' + cut + '" target="_blank" href="' + "https://" + cut + '" >' + cut_text + ' </a>';
-            
-        else:
-            content += cut_text + " ";
-
-    image_name = ""
-
-    try:
-        image = request.files.get("image")
-            
-        image.save(os.path.join("Images", image.filename))
-        os.rename(f"Images/{image.filename}", f'Images/{image.filename.replace(" ", "")}')
-        image_name += "@" + image.filename.replace(" ", "")
-            
-    except:
-        pass # No Image
-
-    if room == "" or room == "/":
-        room = "Global"
-
-    with open(f"{boards}/{room}.json", "r+") as file:
-        message_data = json.load(file)
-        if not display_name:
-            display_name = "Anon"
-        message_data["messages"].append({"value": content + "</h2> " + image_name, "displayname": display_name+": "})
-        
-        update_file(file, message_data)
-
-    #emit("update")
-    return jsonify()
+@app.route("/new-image", methods=["POST"])
+def new_image():
+    return new_image_endpoint()
 
 @app.route("/new-room", methods=["POST"])
 def new_room():

@@ -89,8 +89,6 @@ function new_room(){
 
 var socket = io.connect(window.location.origin);
 
-console.log(socket);
-
 socket.on("connect", function(){
     document.getElementById("disconnected").hidden = true;
     socket.emit("websocket_event", {data: "connection established"}, function(){
@@ -108,26 +106,35 @@ socket.on("update", update_page);
 
 function send_message(event){
     event.preventDefault();
-        let formdata = new FormData($("#poster")[0]);
-        formdata.append("room", location.pathname)
+    let formdata = new FormData($("#poster")[0]);
+    formdata.append("room", location.pathname);
 
-        socket.emit("new-message", formdata, (response) => {
-            $("#poster").find("input[type=text]", "input[type=file]", "input[type=textarea]").val("")
-        });
+    const data = {};
 
-    /*
-    $.ajax({
-        url: "/new-message",
-        method: "POST",
-        data: formdata,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            $("#poster").find("input[type=text], input[type=file], textarea").val('');
-            update_page();
+    formdata.forEach((value, key) => {
+        if (value instanceof File) {
+            data[key] = value.name
+        } else {
+            data[key] = value;
         }
     });
-    */
+
+
+    socket.emit("new-message", data, (response) => {
+        $("#poster")[0].reset();
+    });
+
+    const image = formdata.get("image")
+
+    if (image && image.type.startsWith("image/")) {
+        $.ajax({
+            url: "/new-image",
+            method: "POST",
+            data: formdata,
+            processData: false,
+            contentType: false
+        });
+    }
 }
 
 $(document).ready(function() {
