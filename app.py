@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 from get_endpoints import *
 from post_endpoints import new_room_endpoint, new_image_endpoint, post_endpoint
 
@@ -33,19 +33,15 @@ def room(room):
     
     return redirect(url_for("globall"))
 
-@app.route("/get-situation")
-def situation_report():
-    return situation_report_endpoint()
-
-@app.route("/get-messages", methods=["GET"])
-def get_messages():
-    return get_messages_endpoint()
+@socket.on("get-messages")
+def get_messages(data):
+    return get_messages_endpoint(data)
 
 @app.route("/get-image", methods=["GET"])
 def get_image():
     return get_image_endpoint()
 
-@app.route("/get-rooms", methods=["GET"])
+@socket.on("get-rooms")
 def get_rooms():
     return get_rooms_endpoint()
 
@@ -57,9 +53,9 @@ def post(data):
 def new_image(image):
     return new_image_endpoint(image)
 
-@app.route("/new-room", methods=["POST"])
-def new_room():
-    return new_room_endpoint()
+@socket.on("new-room")
+def new_room(data):
+    return new_room_endpoint(data)
 
 if __name__ == "__main__":
     #socket.run(app, debug=False, host="0.0.0.0") # public

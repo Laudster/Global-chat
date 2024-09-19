@@ -1,29 +1,11 @@
-from flask import request, jsonify, send_file
+from flask import request, send_file
 import json
 import os
 
 boards = "boards"
 
-def situation_report_endpoint():
-    newest_message = request.args.get("newest_message")
-    newest_message = newest_message.replace(" ", "")
-    room = request.args.get("room")
-
-    if room == "/": room = "Global"
-
-    with open(f"{boards}/{room}.json", "r") as file:
-        data = json.load(file)["messages"]
-        data_message = data[len(data) - 1].get("value").replace(" ", "")
-
-        data_message = data_message[0: len(newest_message)]
-
-        if newest_message != data_message:
-            return jsonify(True)
-
-    return jsonify(False)
-
-def get_messages_endpoint():
-    room = request.args.get("room")
+def get_messages_endpoint(data):
+    room = data
 
     room = room[1:len(room)]
 
@@ -33,12 +15,12 @@ def get_messages_endpoint():
         with open(f"{boards}/{room}.json", "r") as file:
             message_data = json.load(file)
 
-        return jsonify(message_data["messages"])
+        return message_data["messages"]
 
     with open(f"{boards}/{room}.json", "r") as file:
         message_data = json.load(file)
 
-    return jsonify(message_data["messages"])
+    return message_data["messages"]
 
 def get_image_endpoint():
     filename : str

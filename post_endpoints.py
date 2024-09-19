@@ -1,4 +1,3 @@
-from flask import request
 from json import dump, load
 from os import path
 
@@ -7,8 +6,8 @@ def update_file(file, data):
     file.truncate()
     dump(data, file, indent=4)
 
-def new_room_endpoint() -> str:
-    room_name = request.form.get("room_name")
+def new_room_endpoint(data) -> str:
+    room_name = data
 
     if not path.exists(f"boards/{room_name}.json"):
         with open(f"boards/{room_name}.json", "w") as file:
