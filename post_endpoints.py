@@ -85,10 +85,10 @@ def post_endpoint(data, socket) -> str:
         update_file(file, message_data)
 
     if image_name == "|":
-        socket.emit("update")
+        socket.emit("update", to="/" + room)
     else:
         while not path.exists(f"Images/{image_name[1:len(image_name)]}") == True:
             pass
-        socket.emit("update")
+        socket.emit("update", to="/" + room)
 
     return "Great success"

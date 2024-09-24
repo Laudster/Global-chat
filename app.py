@@ -1,23 +1,47 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask_socketio import SocketIO
-from get_endpoints import get_messages_endpoint, get_image_endpoint, get_rooms_endpoint, get_rooms
+from flask_socketio import SocketIO, join_room
+from get_endpoints import get_messages_endpoint, get_image_endpoint, get_rooms_endpoint
 from post_endpoints import new_room_endpoint, new_image_endpoint, post_endpoint
+from email.message import EmailMessage
+import smtplib
 import json
 import os
 
 app = Flask(__name__)
 socket = SocketIO(app, max_http_buffer_size=500000000) #5mb
 
+@socket.on("establish_relation")
+def on_join(data):
+    if data.get("room") == "/":
+        join_room("/Global")
+        print("connection established with /Global")
+    else:
+        join_room(data.get("room"))
+        print("connection established with " + data.get("room"))
+
 @app.route("/")
 def globall():
     messages : str
-    display_name = request.args.get("display_name")\
+    display_name = request.args.get("display_name")
 
     with open(f"boards/Global.json", "r") as file:
         data = json.load(file)
         messages = data["messages"]
 
     return render_template("chat.html", messages=messages, displayer=display_name, title="Global")
+
+@socket.on("email-confirm")
+def email_confirm(email):
+    sender = smtplib.SMTP('smtp.gmail.com', 587)
+    sender.starttls()
+    sender.login("chatbox.automated@gmail.com", "ulgy wakc wfrk hwub")
+    message = EmailMessage()
+    message["From"] = "chatbox.automated@gmail.com"
+    message["To"] = email
+    message["Subject"] = "Confirm chatbox email"
+    message.set_content("Your code is: ")
+    sender.send_message(message)
+    sender.quit()
 
 @app.route("/<room>")
 def room(room):
@@ -27,6 +51,7 @@ def room(room):
         with open(f"boards/{room}.json", "r") as file:
             data = json.load(file)
             messages = data["messages"]
+
 
         return render_template("chat.html", messages=messages, displayer=display_name, title=room)
     return redirect(url_for("globall"))

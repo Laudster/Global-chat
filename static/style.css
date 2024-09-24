@@ -1,5 +1,7 @@
 div.rooms
 {
+    position: absolute;
+    width: 15%;
     overflow: auto;
     white-space: nowrap;
     background-color:darkslategrey;
@@ -7,14 +9,26 @@ div.rooms
 }
 div.rooms a
 {
-    display: inline-block;
+    display: block;
     text-align: center;
     text-decoration: none;
     padding: 0.7%;
     font-size: 200%;
     color: white;
 }
+#account-bar
+{
+    text-align: right;
+}
+#account-bar button
+{
+    display: inline-block;
+    padding: 0.5%;
+    font-size: 2vh;
+    margin-right: 1%;
+}
 #disconnected{
+    text-align: center;
     font-weight: bold;
     color: red;
 }
@@ -22,14 +36,14 @@ div.rooms a
 {
     text-align: center;
 }
-button
+div.rooms button
 {
-    padding: 0.6%;
+    width: 100%;
     font-size: 170%;
 }
 #title
 {
-    font-size: 250%;
+    font-size: 300%;
     text-decoration: none;
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */

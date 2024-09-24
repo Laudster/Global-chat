@@ -16,7 +16,43 @@
             
         </div>
 
-        <p id="disconnected"> Disconnected </p>
+        <div id="account-bar">
+            <button onclick="document.getElementById('login').showModal();"> Log In </button>
+            <button onclick="document.getElementById('createaccount').showModal();"> Create Account </button>
+        </div>
+
+        <dialog id="login">
+            <form id="inlog" method="post">
+                <button onclick="document.getElementById('login').close();"> X </button>
+                <p> Log In </p>
+                <input type="email" placeholder="email" autocomplete="off" name="email" required><br><br>
+                <input type="password" placeholder="password" autocomplete="off" name="password" required><br><br>
+                <p style="display: inline;"> Stay logged in </p>
+                <input type="checkbox"><br><br>
+                <input type="submit" value="Log In">
+            </form>
+        </dialog>
+
+        <dialog id="createaccount">
+            <form id="accountcreate" method="post">
+                <button onclick="document.getElementById('createaccount').close();"> X </button>
+                <p> Create account </p>
+                <input id="emailcreate" type="email" placeholder="email" autocomplete="off" name="email-confirm" required><br><br>
+                <input type="submit" value="Continue">
+            </form>
+        </dialog>
+
+        <dialog id="confirmemail">
+            <form id="emailconfirm" method="post">
+                <p> Type in the code emailed to you </p>
+                <input id="emailcode" type="text" placeholder="code" autocomplete="off" name="emailcode" required><br><br>
+                <input type="submit" value="Continue">
+            </form>
+        </dialog>
+
+        <p id="disconnected" hidden> Disconnected </p>
+
+        <br><br>
 
         <div  class="center""><a id="title" href="/"> Global chat </a></div>
 

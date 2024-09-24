@@ -2,8 +2,8 @@ var socket = io.connect(window.location.origin);
 
 socket.on("connect", function(){
     document.getElementById("disconnected").hidden = true;
-    socket.emit("websocket_event", {data: "connection established"}, function(){
-        console.log("suc");
+    socket.emit("establish_relation", {room: location.pathname}, function(){
+        console.log("succ");
     }).on("error", function(){
         console.log("fucked");
     });
@@ -14,6 +14,8 @@ socket.on("disconnect", function(){
 });
 
 function update_page() {
+    console.log("updater");
+
     socket.emit("get-messages", location.pathname, function(messages){
         $('#messages').empty();
             
@@ -73,19 +75,13 @@ function new_room(){
 
 socket.on("update", update_page);
 
-function send_message(event){
-    event.preventDefault();
-    let formdata = new FormData($("#poster")[0]);
-    formdata.append("room", location.pathname);
-
+function formdatatodict(formdata)
+{
     const data = {};
-    
-    let upload = true;
 
     formdata.forEach((value, key) => {
         if (value instanceof File) {
-            console.log(value.size);
-            if (value.size > 5000000){
+            if (value.size >= 5000000){
                 alert("Image is too big, maximum size is 5mb");
                 upload = false;
             }
@@ -94,6 +90,18 @@ function send_message(event){
             data[key] = value;
         }
     });
+
+    return data;
+}
+
+function send_message(event){
+    event.preventDefault();
+    let formdata = new FormData($("#poster")[0]);
+    formdata.append("room", location.pathname);
+
+    const data = formdatatodict(formdata);
+    
+    let upload = true;
 
     if (upload == true){
         socket.emit("new-message", data);
@@ -125,5 +133,26 @@ $(document).ready(function() {
         if (event.key == "Enter" && !event.shiftKey) {
             send_message(event);
         }
+    });
+
+    $("#inlog").on("submit", function(event){
+        event.preventDefault();
+
+        console.log(formdatatodict(new FormData($("#inlog")[0])));
+    });
+
+    $("#accountcreate").on("submit", function(event){
+        event.preventDefault();
+        
+        socket.emit("email-confirm", document.getElementById("emailcreate").value);
+
+        document.getElementById("createaccount").close();
+        document.getElementById("confirmemail").showModal();
+    });
+
+    $("#emailconfirm").on("submit", function(event){
+        event.preventDefault();
+
+        document.getElementById("confirmemail").close();
     });
 });
