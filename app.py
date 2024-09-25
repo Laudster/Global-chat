@@ -1,9 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, join_room
+from account_creation import email_confirm_func, confirm_code_func
 from get_endpoints import get_messages_endpoint, get_image_endpoint, get_rooms_endpoint
 from post_endpoints import new_room_endpoint, new_image_endpoint, post_endpoint
-from email.message import EmailMessage
-import smtplib
 import json
 import os
 
@@ -19,6 +18,14 @@ def on_join(data):
         join_room(data.get("room"))
         print("connection established with " + data.get("room"))
 
+@socket.on("email-confirm")
+def email_confirm(email):
+    email_confirm_func(email)
+
+@socket.on("email-code")
+def confirm_code(data):
+    confirm_code_func(data)
+
 @app.route("/")
 def globall():
     messages : str
@@ -30,18 +37,6 @@ def globall():
 
     return render_template("chat.html", messages=messages, displayer=display_name, title="Global")
 
-@socket.on("email-confirm")
-def email_confirm(email):
-    sender = smtplib.SMTP('smtp.gmail.com', 587)
-    sender.starttls()
-    sender.login("chatbox.automated@gmail.com", "ulgy wakc wfrk hwub")
-    message = EmailMessage()
-    message["From"] = "chatbox.automated@gmail.com"
-    message["To"] = email
-    message["Subject"] = "Confirm chatbox email"
-    message.set_content("Your code is: ")
-    sender.send_message(message)
-    sender.quit()
 
 @app.route("/<room>")
 def room(room):

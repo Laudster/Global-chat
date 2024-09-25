@@ -135,6 +135,8 @@ $(document).ready(function() {
         }
     });
 
+    let email;
+
     $("#inlog").on("submit", function(event){
         event.preventDefault();
 
@@ -144,7 +146,8 @@ $(document).ready(function() {
     $("#accountcreate").on("submit", function(event){
         event.preventDefault();
         
-        socket.emit("email-confirm", document.getElementById("emailcreate").value);
+        email = document.getElementById("emailcreate").value;
+        socket.emit("email-confirm", email);
 
         document.getElementById("createaccount").close();
         document.getElementById("confirmemail").showModal();
@@ -153,6 +156,6 @@ $(document).ready(function() {
     $("#emailconfirm").on("submit", function(event){
         event.preventDefault();
 
-        document.getElementById("confirmemail").close();
+        socket.emit("email-code", {"email": email, "code": document.getElementById("emailcode").value})
     });
 });
