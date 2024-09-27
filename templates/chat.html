@@ -50,6 +50,21 @@
             </form>
         </dialog>
 
+        <dialog id="accountinfo">
+            <form id="infoaccount" method="post">
+                <p> Create Account </p>
+                <input id="username" type="text" placeholder="username" autocomplete="off" name="username" required><br><br>
+                <input id="password" type="password" placeholder="password" autocomplete="off" name="password" required><br><br>
+                <input id="passwordconfirm" type="password" placeholder="confirm password" autocomplete="off" name="confirmpassword" required><br><br>
+                <input type="submit" value="Create Account">
+            </form>
+        </dialog>
+
+        <dialog id="accountcreated">
+            <p style="color: green;"> Account Created </p>
+            <button onclick=" document.getElementById('accountcreated').close();"> Close </button>
+        </dialog>
+
         <p id="disconnected" hidden> Disconnected </p>
 
         <br><br>

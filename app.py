@@ -1,12 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, join_room
-from account_creation import email_confirm_func, confirm_code_func
+from account_creation import email_confirm_func, confirm_code_func, create_account_func
 from get_endpoints import get_messages_endpoint, get_image_endpoint, get_rooms_endpoint
 from post_endpoints import new_room_endpoint, new_image_endpoint, post_endpoint
 import json
 import os
 
 app = Flask(__name__)
+
+app.config["SECRET_KEY"] = "Hemmelig"
+
 socket = SocketIO(app, max_http_buffer_size=500000000) #5mb
 
 @socket.on("establish_relation")
@@ -24,7 +27,11 @@ def email_confirm(email):
 
 @socket.on("email-code")
 def confirm_code(data):
-    confirm_code_func(data)
+    confirm_code_func(data, socket)
+
+@socket.on("account-create")
+def account_create(data):
+    create_account_func(data)
 
 @app.route("/")
 def globall():

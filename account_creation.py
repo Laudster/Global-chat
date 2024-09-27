@@ -1,6 +1,7 @@
 from email.message import EmailMessage
 from random_api import random_code
 from json import dump, load
+from flask import session
 import smtplib
 
 def email_confirm_func(email):
@@ -27,18 +28,32 @@ def email_confirm_func(email):
         file.seek(0)
         file.truncate()
         dump(data, file, indent=4)
+    
+    session["email"] = email
 
-def confirm_code_func(data):
-    email = data.get("email")
+def confirm_code_func(data, socket):
+    email = session["email"]
     code = data.get("code")
 
     with open("account-storage/email-confirm.json", "r") as file:
         data = load(file)
 
-        if int(data["codes"][email]) == int(code):
-            print("Correct code")
+        if str(data["codes"][email]).replace(" ", "") == str(code).replace(" ", ""):
+            socket.emit("correct code")
         else:
-            print(code)
-            print(data["codes"][email])
+            socket.emit("incorrect code")
 
     return ""
+
+def create_account_func(data):
+    username = data.get("username")
+    password = data.get("password")
+    email = session["email"]
+    
+    with open("account-storage/accounts.json", "r+") as file:
+        accounts = load(file)
+        accounts["accounts"].append({"username": username, "email": email, "password": password})
+
+        file.seek(0)
+        file.truncate()
+        dump(accounts, file, indent=4)

@@ -135,8 +135,6 @@ $(document).ready(function() {
         }
     });
 
-    let email;
-
     $("#inlog").on("submit", function(event){
         event.preventDefault();
 
@@ -146,8 +144,7 @@ $(document).ready(function() {
     $("#accountcreate").on("submit", function(event){
         event.preventDefault();
         
-        email = document.getElementById("emailcreate").value;
-        socket.emit("email-confirm", email);
+        socket.emit("email-confirm", document.getElementById("emailcreate").value);
 
         document.getElementById("createaccount").close();
         document.getElementById("confirmemail").showModal();
@@ -156,6 +153,31 @@ $(document).ready(function() {
     $("#emailconfirm").on("submit", function(event){
         event.preventDefault();
 
-        socket.emit("email-code", {"email": email, "code": document.getElementById("emailcode").value})
+        socket.emit("email-code", {"code": document.getElementById("emailcode").value})
+    });
+
+    socket.on("correct code", function(){
+        document.getElementById("confirmemail").close();
+        document.getElementById("accountinfo").showModal();
+    });
+
+    socket.on("incorrect code", function(){
+        alert("Incorrect Code")
+    });
+
+    $("#infoaccount").on("submit", function(event)
+    {
+        event.preventDefault();
+
+        if (document.getElementById("password").value == document.getElementById("passwordconfirm").value)
+            {
+                socket.emit("account-create", {"username": document.getElementById("username").value, "password": document.getElementById("password").value});
+                document.getElementById("accountinfo").close();
+                document.getElementById("accountcreated").showModal();
+            } else
+            {
+                alert("Passwords don't match");
+                $("#infoaccount")[0].reset();
+            }
     });
 });
