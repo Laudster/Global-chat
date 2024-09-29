@@ -49,6 +49,16 @@ div.rooms button
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
 }
+#usernamedisplay
+{
+    width: 10%;
+    box-sizing: content-box;
+    border: solid 1px black;
+    margin-top: 4%;
+    margin-left: 45%;
+    margin-bottom: 2%;
+    text-align: center;
+}
 .message
 {
     text-align: center;

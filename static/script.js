@@ -98,6 +98,7 @@ function send_message(event){
     event.preventDefault();
     let formdata = new FormData($("#poster")[0]);
     formdata.append("room", location.pathname);
+    formdata.append("display_name", document.getElementById("usernamedisplay").innerHTML);
 
     const data = formdatatodict(formdata);
     
@@ -138,12 +139,34 @@ $(document).ready(function() {
     $("#inlog").on("submit", function(event){
         event.preventDefault();
 
-        console.log(formdatatodict(new FormData($("#inlog")[0])));
+        socket.emit("login-attempt", formdatatodict(new FormData($("#inlog")[0])));
+    });
+
+    socket.on("login-sucess", function(username){
+        console.log(username);
+
+        document.getElementById("login").close();
+        document.getElementById("account-bar").style.display = "none";
+
+        document.getElementById("usernamedisplay").innerHTML = username;
+    });
+
+    socket.on("login-fail", function(){
+        alert("Wrong Login Credentials");
     });
 
     $("#accountcreate").on("submit", function(event){
         event.preventDefault();
         
+        socket.emit("check-for-email", document.getElementById("emailcreate").value);
+    });
+
+    socket.on("email-used", function(){
+        $("#accountcreate")[0].reset();
+        alert("Email Already In Use");
+    });
+
+    socket.on("email-free", function(){
         socket.emit("email-confirm", document.getElementById("emailcreate").value);
 
         document.getElementById("createaccount").close();
@@ -162,7 +185,7 @@ $(document).ready(function() {
     });
 
     socket.on("incorrect code", function(){
-        alert("Incorrect Code")
+        alert("Incorrect Code");
     });
 
     $("#infoaccount").on("submit", function(event)
@@ -171,13 +194,22 @@ $(document).ready(function() {
 
         if (document.getElementById("password").value == document.getElementById("passwordconfirm").value)
             {
-                socket.emit("account-create", {"username": document.getElementById("username").value, "password": document.getElementById("password").value});
-                document.getElementById("accountinfo").close();
-                document.getElementById("accountcreated").showModal();
+                socket.emit("username-check", document.getElementById("username").value);
             } else
             {
                 alert("Passwords don't match");
                 $("#infoaccount")[0].reset();
             }
+    });
+
+    socket.on("username-used", function(){
+        alert("Username already in use");
+        $("#infoaccount")[0].reset();
+    });
+
+    socket.on("username-free", function(){
+        socket.emit("account-create", {"username": document.getElementById("username").value, "password": document.getElementById("password").value});
+        document.getElementById("accountinfo").close();
+        document.getElementById("accountcreated").showModal();
     });
 });

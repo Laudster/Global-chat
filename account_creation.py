@@ -4,6 +4,17 @@ from json import dump, load
 from flask import session
 import smtplib
 
+def check_for_email_func(email, socket):
+    with open("account-storage/accounts.json", "r") as file:
+        data = load(file)
+
+        for v in data["accounts"]:
+            if v.get("email").upper() == email.upper():
+                socket.emit("email-used")
+                return ""
+        
+        socket.emit("email-free")
+
 def email_confirm_func(email):
     sender = smtplib.SMTP('smtp.gmail.com', 587)
     sender.starttls()
@@ -44,6 +55,18 @@ def confirm_code_func(data, socket):
             socket.emit("incorrect code")
 
     return ""
+
+def check_for_username_func(username, socket):
+    with open("account-storage/accounts.json", "r") as file:
+        data = load(file)
+
+        for v in data["accounts"]:
+            if v.get("username").upper() == username.upper():
+                socket.emit("username-used")
+                return ""
+        
+        socket.emit("username-free")
+
 
 def create_account_func(data):
     username = data.get("username")

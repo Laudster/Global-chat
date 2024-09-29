@@ -67,6 +67,42 @@
         {
             "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Anon: test </h2> |",
             "displayname": "Anon: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Anon: test </h2> |",
+            "displayname": "Anon: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Anon: amund </h2> |",
+            "displayname": "Anon: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Anon: Login fungerte, fantastisk </h2> |",
+            "displayname": "Anon: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Anon: what </h2> |",
+            "displayname": "Anon: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">undefined: j\u00e6vla forvirret </h2> |",
+            "displayname": "undefined: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Amund: hvorfor </h2> |",
+            "displayname": "Amund: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">AmundLB: yay </h2> |",
+            "displayname": "AmundLB: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">AmundLB: login fungerer, fantastisk </h2> |",
+            "displayname": "AmundLB: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">AmundLB: n\u00e5 er det bare \u00e5 legge til security og lagring av logget inn bruker </h2> |",
+            "displayname": "AmundLB: "
         }
     ]
 }
