@@ -103,6 +103,30 @@
         {
             "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">AmundLB: n\u00e5 er det bare \u00e5 legge til security og lagring av logget inn bruker </h2> |",
             "displayname": "AmundLB: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Falsk: test </h2> |",
+            "displayname": "Falsk: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Anon: test </h2> |",
+            "displayname": "Anon: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Anon: dfwasfwa </h2> |",
+            "displayname": "Anon: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Anon: kopdkopwakopd </h2> |",
+            "displayname": "Anon: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">AmundLB: wafawf </h2> |",
+            "displayname": "AmundLB: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">AmundLB: amund </h2> |",
+            "displayname": "AmundLB: "
         }
     ]
 }

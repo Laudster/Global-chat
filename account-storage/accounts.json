@@ -2,13 +2,8 @@
     "accounts": [
         {
             "username": "Amund",
-            "email": "falsk@gmail.com",
-            "password": "falsk"
-        },
-        {
-            "username": "AmundLB",
             "email": "amundkampen@gmail.com",
-            "password": "Falsk"
+            "password": "falsk"
         }
     ]
 }

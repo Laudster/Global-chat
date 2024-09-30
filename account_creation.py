@@ -46,11 +46,15 @@ def confirm_code_func(data, socket):
     email = session["email"]
     code = data.get("code")
 
-    with open("account-storage/email-confirm.json", "r") as file:
+    with open("account-storage/email-confirm.json", "r+") as file:
         data = load(file)
 
         if str(data["codes"][email]).replace(" ", "") == str(code).replace(" ", ""):
             socket.emit("correct code")
+            del data["codes"][email]
+            file.seek(0)
+            file.truncate()
+            dump(data, file, indent=4)
         else:
             socket.emit("incorrect code")
 

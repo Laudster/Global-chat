@@ -96,24 +96,29 @@ function formdatatodict(formdata)
 
 function send_message(event){
     event.preventDefault();
-    let formdata = new FormData($("#poster")[0]);
-    formdata.append("room", location.pathname);
-    formdata.append("display_name", document.getElementById("usernamedisplay").innerHTML);
 
-    const data = formdatatodict(formdata);
+    socket.emit("get-username", function(username){
+        let formdata = new FormData($("#poster")[0]);
+        formdata.append("room", location.pathname);
+        formdata.append("display_name", username);
+
+        document.getElementById("usernamedisplay").innerHTML = username;
     
-    let upload = true;
-
-    if (upload == true){
-        socket.emit("new-message", data);
-        $("#poster")[0].reset();
-
-        const image = formdata.get("image");
-
-        if (image && image.type.startsWith("image/")) {
-        socket.emit("new-image", {"image": image, "filename": data["image"]});
+        const data = formdatatodict(formdata);
+        
+        let upload = true;
+    
+        if (upload == true){
+            socket.emit("new-message", data);
+            $("#poster")[0].reset();
+    
+            const image = formdata.get("image");
+    
+            if (image && image.type.startsWith("image/")) {
+            socket.emit("new-image", {"image": image, "filename": data["image"]});
+            }
         }
-    }
+    });
 }
 
 $(document).ready(function() {

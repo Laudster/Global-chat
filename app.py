@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, join_room
 from account_creation import check_for_email_func, email_confirm_func, confirm_code_func, check_for_username_func, create_account_func
-from account_login import login_attempt_func
+from account_login import login_attempt_func, get_username_func
 from get_endpoints import get_messages_endpoint, get_image_endpoint, get_rooms_endpoint
 from post_endpoints import new_room_endpoint, new_image_endpoint, post_endpoint
 import json
@@ -25,6 +25,10 @@ def on_join(data):
 @socket.on("login-attempt")
 def login_attempt(data):
     login_attempt_func(data, socket)
+
+@socket.on("get-username")
+def get_username():
+    return get_username_func()
 
 @socket.on("check-for-email")
 def check_for_email(email):
