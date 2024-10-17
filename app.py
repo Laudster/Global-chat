@@ -1,13 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_socketio import SocketIO, join_room
 from account_creation import check_for_email_func, email_confirm_func, confirm_code_func, check_for_username_func, create_account_func
 from account_login import login_attempt_func, get_username_func
 from get_endpoints import get_messages_endpoint, get_image_endpoint, get_rooms_endpoint
 from post_endpoints import new_room_endpoint, new_image_endpoint, post_endpoint
+from datetime import timedelta
+
 import json
 import os
 
 app = Flask(__name__)
+app.permanent_session_lifetime = timedelta(minutes=30)
 
 app.config["SECRET_KEY"] = "Hemmelig"
 
@@ -101,4 +104,4 @@ def new_room(data):
 
 if __name__ == "__main__":
     #socket.run(app, debug=False, host="0.0.0.0") # public
-    socket.run(app, debug=True)
+    socket.run(app, host="0.0.0.0", debug=True, allow_unsafe_werkzeug=True)

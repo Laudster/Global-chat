@@ -1,12 +1,16 @@
 var socket = io.connect(window.location.origin);
+if (location.pathname == "/") socket.emit("establish_relation", {room: "/Global"});
+else socket.emit("establish_relation", {room: location.pathname});
 
 socket.on("connect", function(){
     document.getElementById("disconnected").hidden = true;
-    socket.emit("establish_relation", {room: location.pathname}, function(){
-        console.log("succ");
-    }).on("error", function(){
-        console.log("fucked");
-    });
+    socket.emit("get-username", function(user){
+        console.log(user);
+        if (user != "Anon"){
+            document.getElementById("account-bar").style.display = "none";
+            document.getElementById("usernamedisplay").innerHTML = user;
+        }
+    })
 });
 
 socket.on("disconnect", function(){

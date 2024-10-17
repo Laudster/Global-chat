@@ -1,5 +1,4 @@
 from requests import post
-import json
 
 # Set your API key
 api_key = '7f555670-c909-492a-91fb-1daecc8b5cf7'

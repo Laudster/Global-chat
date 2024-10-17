@@ -1,7 +1,7 @@
 from email.message import EmailMessage
 from random_api import random_code
 from json import dump, load
-from flask import session
+from flask import session, request
 import smtplib
 
 def check_for_email_func(email, socket):
@@ -13,7 +13,7 @@ def check_for_email_func(email, socket):
                 socket.emit("email-used")
                 return ""
         
-        socket.emit("email-free")
+        socket.emit("email-free", to=request.sid)
 
 def email_confirm_func(email):
     sender = smtplib.SMTP('smtp.gmail.com', 587)
@@ -50,13 +50,13 @@ def confirm_code_func(data, socket):
         data = load(file)
 
         if str(data["codes"][email]).replace(" ", "") == str(code).replace(" ", ""):
-            socket.emit("correct code")
+            socket.emit("correct code", to=request.sid)
             del data["codes"][email]
             file.seek(0)
             file.truncate()
             dump(data, file, indent=4)
         else:
-            socket.emit("incorrect code")
+            socket.emit("incorrect code", to=request.sid)
 
     return ""
 
@@ -66,10 +66,10 @@ def check_for_username_func(username, socket):
 
         for v in data["accounts"]:
             if v.get("username").upper() == username.upper():
-                socket.emit("username-used")
+                socket.emit("username-used", to=request.sid)
                 return ""
         
-        socket.emit("username-free")
+        socket.emit("username-free", to=request.sid)
 
 
 def create_account_func(data):
