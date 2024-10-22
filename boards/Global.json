@@ -1,5 +1,9 @@
 {
+    "creator": "Amund",
     "messages": [
-        
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Anon: test </h2> |",
+            "displayname": "Anon: "
+        }
     ]
 }

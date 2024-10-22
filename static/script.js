@@ -22,7 +22,7 @@ function update_page() {
 
     socket.emit("get-messages", location.pathname, function(messages){
         $('#messages').empty();
-            
+
         messages.reverse().forEach(function(message) {
             let message_text = message.value
             let image = "";
@@ -46,20 +46,40 @@ function update_page() {
 
 function get_rooms(){
     socket.emit("get-rooms", function(data){
+        console.log(data);
         if (location.pathname.split("/")[1] == ""){
             $("#rooms").append('<a style="background-color: rgb(49, 53, 54);" href="/" > Global </a>')
         } else{
             $("#rooms").append('<a href="/" > Global </a>')
         }
-        
-        data.forEach(function(room){
-            if (location.pathname.split("/")[1] == room){
-                $("#rooms").append('<a style="background-color: rgb(49, 53, 54);" href=' + room + '>' + room + '</a>');
-            } else{
-                $("#rooms").append('<a href=' + room + '>' + room + '</a>');
-            }
+
+        socket.emit("get-username", (user) => {
+            data.forEach(function(room){
+                let link = document.createElement("a");
+                link.href = room["name"]
+                link.textContent = room["name"]
+    
+                if (location.pathname.split("/")[1] == room["name"]){
+                    link.style.backgroundColor = "rgb(49, 53, 54)";
+                }
+    
+                $("#rooms").append(link);
+    
+                if (user.replace(" ", "") == room["creator"].replace(" ", "")){
+                    let settings = document.createElement("button");
+                    settings.className = "donotformatthisfuckingbutton";
+                    let image = document.createElement("img");
+                    image.src = "static/settings.png";
+                    image.width = 20;
+                    settings.innerHTML = image.outerHTML;
+                    document.getElementById("rooms").lastChild.style.display = "inline-block";
+                    document.getElementById("rooms").lastChild.style.marginLeft = "20%";
+                    document.getElementById("rooms").lastChild.style.paddingRight = "20%";
+                    $("#rooms").append(settings);
+                } else console.log(room["creator"]);
+            });
+            $("#rooms").append('<button onclick="new_room()"> + </button>');
         });
-        $("#rooms").append('<button onclick="new_room()"> + </button>');
     });
 }
 

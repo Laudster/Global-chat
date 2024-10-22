@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, join_room
-from os import path, get_env
+from os import path, getenv
 from json import load
 from account_creation import check_for_email_func, email_confirm_func, confirm_code_func, check_for_username_func, create_account_func
 from account_login import login_attempt_func, get_username_func
@@ -8,10 +8,10 @@ from get_endpoints import get_messages_endpoint, get_image_endpoint, get_rooms_e
 from post_endpoints import new_room_endpoint, new_image_endpoint, post_endpoint
 from dotenv import load_dotenv
 
-load_dotenv()
-
 app = Flask(__name__)
-app.config["SECRET_KEY"] = get_env("SECRET_KEY")
+
+load_dotenv()
+app.config["SECRET_KEY"] = getenv("SECRET_KEY")
 
 socket = SocketIO(app, max_http_buffer_size=500000000) #5mb
 

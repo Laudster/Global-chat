@@ -7,6 +7,7 @@ COPY . /app
 RUN pip install flask
 RUN pip install flask_socketio
 RUN pip install requests
+RUN pip install python-dotenv
 
 
 EXPOSE 5000
