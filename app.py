@@ -1,18 +1,17 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, join_room
+from os import path, get_env
+from json import load
 from account_creation import check_for_email_func, email_confirm_func, confirm_code_func, check_for_username_func, create_account_func
 from account_login import login_attempt_func, get_username_func
 from get_endpoints import get_messages_endpoint, get_image_endpoint, get_rooms_endpoint
 from post_endpoints import new_room_endpoint, new_image_endpoint, post_endpoint
-from datetime import timedelta
+from dotenv import load_dotenv
 
-import json
-import os
+load_dotenv()
 
 app = Flask(__name__)
-app.permanent_session_lifetime = timedelta(minutes=30)
-
-app.config["SECRET_KEY"] = "Hemmelig"
+app.config["SECRET_KEY"] = get_env("SECRET_KEY")
 
 socket = SocketIO(app, max_http_buffer_size=500000000) #5mb
 
@@ -26,32 +25,25 @@ def on_join(data):
         print("connection established with " + data.get("room"))
 
 @socket.on("login-attempt")
-def login_attempt(data):
-    login_attempt_func(data, socket)
+def login_attempt(data): login_attempt_func(data, socket)
 
 @socket.on("get-username")
-def get_username():
-    return get_username_func()
+def get_username(): return get_username_func()
 
 @socket.on("check-for-email")
-def check_for_email(email):
-    check_for_email_func(email, socket)
+def check_for_email(email): check_for_email_func(email, socket)
 
 @socket.on("email-confirm")
-def email_confirm(email):
-    email_confirm_func(email)
+def email_confirm(email): email_confirm_func(email)
 
 @socket.on("email-code")
-def confirm_code(data):
-    confirm_code_func(data, socket)
+def confirm_code(data): confirm_code_func(data, socket)
 
 @socket.on("username-check")
-def check_for_username(data):
-    check_for_username_func(data, socket)
+def check_for_username(data): check_for_username_func(data, socket)
 
 @socket.on("account-create")
-def account_create(data):
-    create_account_func(data)
+def account_create(data): create_account_func(data)
 
 @app.route("/")
 def globall():
@@ -59,7 +51,7 @@ def globall():
     display_name = request.args.get("display_name")
 
     with open(f"boards/Global.json", "r") as file:
-        data = json.load(file)
+        data = load(file)
         messages = data["messages"]
 
     return render_template("chat.html", messages=messages, displayer=display_name, title="Global")
@@ -67,11 +59,11 @@ def globall():
 
 @app.route("/<room>")
 def room(room):
-    if os.path.exists(f"boards/{room}.json"):
+    if path.exists(f"boards/{room}.json"):
         messages : str
         display_name = request.args.get("display_name")
         with open(f"boards/{room}.json", "r") as file:
-            data = json.load(file)
+            data = load(file)
             messages = data["messages"]
 
 
@@ -79,29 +71,23 @@ def room(room):
     return redirect(url_for("globall"))
 
 @app.route("/get-image", methods=["GET"])
-def get_image():
-    return get_image_endpoint()
+def get_image(): return get_image_endpoint()
 
 @socket.on("get-messages")
-def get_messages(data):
-    return get_messages_endpoint(data)
+def get_messages(data): return get_messages_endpoint(data)
 
 @socket.on("get-rooms")
-def get_rooms():
-    return get_rooms_endpoint()
+def get_rooms(): return get_rooms_endpoint()
 
 @socket.on("new-message")
-def post(data):
-    return post_endpoint(data, socket)
+def post(data): return post_endpoint(data, socket)
 
 @socket.on("new-image")
-def new_image(image):
-    return new_image_endpoint(image)
+def new_image(image): return new_image_endpoint(image)
 
 @socket.on("new-room")
-def new_room(data):
-    return new_room_endpoint(data)
+def new_room(data): return new_room_endpoint(data)
 
 if __name__ == "__main__":
-    #socket.run(app, debug=False, host="0.0.0.0") # public
-    socket.run(app, host="0.0.0.0", debug=True, allow_unsafe_werkzeug=True)
+    #socket.run(app, debug=False, allow_unsafe_werkzeug, host="0.0.0.0") # public
+    socket.run(app, debug=True, allow_unsafe_werkzeug=True) # dev

@@ -12,7 +12,6 @@ def login_attempt_func(data, socket):
             if v.get("email") == email:
                 if v.get("password") == password:
                     socket.emit("login-sucess", v.get("username"), to=request.sid)
-                    session.permanent = True
                     session["login"] = v.get("username")
                     return ""
         
