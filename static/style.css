@@ -2,7 +2,6 @@ div.rooms
 {
     position: absolute;
     width: 15%;
-    overflow: auto;
     white-space: nowrap;
     background-color:darkslategrey;
     margin-bottom: 1.2%;
@@ -44,6 +43,12 @@ div.rooms button:not(.donotformatthisfuckingbutton)
     width: 100%;
     font-size: 170%;
 }
+
+#room-settings .list{
+    height: 200px;
+    overflow-y: scroll;
+}
+
 #title
 {
     font-size: 300%;

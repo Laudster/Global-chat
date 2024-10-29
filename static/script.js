@@ -48,6 +48,38 @@ function update_page() {
     })
 }
 
+function create_list(type){
+    socket.emit("get-username", function(user){
+        var head = document.createElement("div");
+        head.id = type + "list";
+        var new_whited = document.createElement("input");
+        new_whited.type = "text";
+        head.appendChild(new_whited);
+
+        var listdiv = document.createElement("div");
+        listdiv.className = "list";
+
+        var list = document.createElement("ul");
+
+        var listelement
+
+        if (type != "white"){
+            listelement =  document.createElement("li");
+            var listelementcontent = document.createElement("p");
+            listelementcontent.textContent = user;
+            listelement.appendChild(listelementcontent);
+
+            list.appendChild(listelement);
+        }
+
+        listdiv.appendChild(list);
+
+        head.appendChild(listdiv);
+
+        document.getElementById("room-settings").insertBefore(head, document.getElementById("enable" + type + "list").nextSibling.nextSibling.nextSibling.nextSibling.nextSibling);
+    })
+}
+
 function get_rooms(){
     socket.emit("get-rooms", function(data){
         socket.emit("get-username", (user) => {
@@ -71,6 +103,29 @@ function get_rooms(){
 
                     settings.onclick = () => {
                         if (document.getElementById("room-settings").style.display == "none"){
+                            socket.emit("get-list-statuses", room["name"], function(data){
+                                console.log(data);
+                                if (data[0] != null){
+                                    document.getElementById("enablewhitelist").checked = true;
+                                    create_list("white");
+                                    var listdiv = document.getElementById("whitelist").querySelector('div');
+
+                                    var list = document.createElement("ul");
+
+                                    data.forEach(member => {
+                                        var listelement = document.createElement("li");
+                                        listelement.textContent = member;
+                                        list.appendChild(listelement);
+                                    });
+
+                                    listdiv.appendChild(list);
+                                }
+                                if (data[1] != null){
+                                    document.getElementById("enableblacklist").checked = true;
+                                    create_list("black");
+                                    document.getElementById("blacklist").querySelector("div").empty();
+                                }
+                            });
                             document.getElementById("room-settings").style.display = "block";
                             document.getElementById("room-settings").querySelector("h3").textContent = room["name"] + " chat";
                         } else document.getElementById("room-settings").style.display = "none";
@@ -173,6 +228,27 @@ $(document).ready(function() {
             send_message(event);
         }
     });
+
+
+    document.getElementById("enableblacklist").addEventListener("change", (event) => {
+        if (event.target.checked == true){
+            create_list("black");
+            socket.emit("init-list", {"type": "black", "room": event.target.parentElement.querySelector("h3").textContent.split(" ")[0]});
+        } else if (event.target.checked == false){
+            document.getElementById("blacklist").remove();
+            socket.emit("remove-list", {"type": "black", "room": event.target.parentElement.querySelector("h3").textContent.split(" ")[0]});
+        }
+    })
+
+    document.getElementById("enablewhitelist").addEventListener("change", (event) => {
+        if (event.target.checked == true){
+            create_list("white");
+            socket.emit("init-list", {"type": "white", "room": event.target.parentElement.querySelector("h3").textContent.split(" ")[0]});
+        } else if (event.target.checked == false){
+            document.getElementById("whitelist").remove();
+            socket.emit("remove-list", {"type": "white", "room": event.target.parentElement.querySelector("h3").textContent.split(" ")[0]});
+        }
+    })
 
     $("#inlog").on("submit", function(event){
         event.preventDefault();

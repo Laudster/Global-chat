@@ -1,4 +1,15 @@
 {
     "creator": "Static",
-    "messages": []
+    "blacklist": null,
+    "whitelist": null,
+    "messages": [
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Anon: bilde </h2> |Bilde1.jpg",
+            "displayname": "Anon: "
+        },
+        {
+            "value": "<h2 style=\"margin-bottom: 20px;\" class=\"message\">Anon: awd </h2> |testvideo.mp4",
+            "displayname": "Anon: "
+        }
+    ]
 }
