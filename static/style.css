@@ -6,14 +6,17 @@ div.rooms
     white-space: nowrap;
     background-color:darkslategrey;
     margin-bottom: 1.2%;
+    overflow: visible;
 }
 div.rooms a
 {
     display: block;
     text-align: center;
     text-decoration: none;
-    padding: 0.7%;
+    padding-top: 0.3%;
+    padding-bottom: 0.3%;
     font-size: 200%;
+    width: 100%;
     color: white;
 }
 #account-bar
@@ -82,6 +85,24 @@ div.rooms button:not(.donotformatthisfuckingbutton)
     display: block;
     max-width: 15%;
     width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3%;
+}
+
+#messages video
+{
+    display: block;
+    max-width: 15%;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3%;
+}
+
+#messages audio
+{
+    display: block;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 3%;

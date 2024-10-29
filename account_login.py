@@ -1,22 +1,27 @@
 from json import load
-from flask import request, session
+from flask import request, session, jsonify
 
-def login_attempt_func(data, socket):
-    email = data.get("email")
-    password = data.get("password")
+def login_attempt_func():
+    data = request.get_json()
+    print(data)
+    email = data["email"]
+    password = data["password"]
+
+    print(email)
+    print(password)
 
     with open("account-storage/accounts.json", "r") as file:
-        data = load(file)
+        savedata = load(file)
 
-        for v in data["accounts"]:
+        for v in savedata["accounts"]:
             if v.get("email") == email:
                 if v.get("password") == password:
-                    socket.emit("login-sucess", v.get("username"), to=request.sid)
                     session["login"] = v.get("username")
-                    return ""
+                    session.permanent = True
+                    print(session)
+                    return jsonify({"status": "login-sucess", "username": v.get("username")})
         
-        socket.emit("login-fail", to=request.sid)
+        return jsonify({"stauts": "login-fail"})
 
 def get_username_func():
-    print(session)
     return session.get("login", "Anon")

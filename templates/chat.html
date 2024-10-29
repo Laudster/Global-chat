@@ -27,8 +27,6 @@
                 <p> Log In </p>
                 <input type="email" placeholder="email" autocomplete="off" name="email" required><br><br>
                 <input type="password" placeholder="password" autocomplete="off" name="password" required><br><br>
-                <p style="display: inline;"> Stay logged in </p>
-                <input type="checkbox"><br><br>
                 <input type="submit" value="Log In">
             </form>
         </dialog>
@@ -65,6 +63,19 @@
             <button onclick=" document.getElementById('accountcreated').close();"> Close </button>
         </dialog>
 
+        <dialog style="display: none;" id="room-settings">
+            <h3> Room Title </h3>
+            
+            <input type="checkbox">
+            <p style="display: inline;"> Activate blacklist </p>
+            <br>
+            <input type="checkbox">
+            <p style="display: inline;"> Activate whitelist </p>
+            <br><br>
+
+            <button onclick="delete_room()"> Delete </button>
+        </dialog>
+
         <p id="disconnected" hidden> Disconnected </p>
 
         <br><br>
@@ -76,7 +87,7 @@
         <form class="center" id="poster" method="POST" action="/new-message" enctype="multipart/form-data">
             <label for="message">Post message:</label><br>
             <textarea id="message" name="message" rows="4" cols="40" required></textarea><br>
-            <input type="file" accept="image/*" id="image" name="image">
+            <input type="file" id="image" name="image">
             <input type="submit" value="Post message">
         </form>
 

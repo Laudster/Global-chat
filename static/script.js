@@ -5,7 +5,6 @@ else socket.emit("establish_relation", {room: location.pathname});
 socket.on("connect", function(){
     document.getElementById("disconnected").hidden = true;
     socket.emit("get-username", function(user){
-        console.log(user);
         if (user != "Anon"){
             document.getElementById("account-bar").style.display = "none";
             document.getElementById("usernamedisplay").innerHTML = user;
@@ -18,7 +17,6 @@ socket.on("disconnect", function(){
 });
 
 function update_page() {
-    console.log("updater");
 
     socket.emit("get-messages", location.pathname, function(messages){
         $('#messages').empty();
@@ -38,7 +36,13 @@ function update_page() {
 
             $('#messages').append(message_text);
             if (image != ""){
-                $('#messages').append('<img src="/get-image?filename=' + image + '">');
+                if (!image.endsWith(".mp4") && !image.endsWith(".wav") && !image.endsWith(".mp3") && !image.endsWith(".ogv")){
+                    $('#messages').append('<img src="/get-image?filename=' + image + '">');
+                } else if (image.endsWith(".mp4")){
+                    $('#messages').append('<video controls> <source src="/get-image?filename=' + image + '"></video>');
+                } else {
+                    $('#messages').append('<audio controls> <source src="/get-image?filename=' + image + '"></audio>');
+                }
             }
         });
     })
@@ -46,20 +50,13 @@ function update_page() {
 
 function get_rooms(){
     socket.emit("get-rooms", function(data){
-        console.log(data);
-        if (location.pathname.split("/")[1] == ""){
-            $("#rooms").append('<a style="background-color: rgb(49, 53, 54);" href="/" > Global </a>')
-        } else{
-            $("#rooms").append('<a href="/" > Global </a>')
-        }
-
         socket.emit("get-username", (user) => {
             data.forEach(function(room){
                 let link = document.createElement("a");
                 link.href = room["name"]
                 link.textContent = room["name"]
     
-                if (location.pathname.split("/")[1] == room["name"]){
+                if (location.pathname.split("/")[1] == room["name"] || room["name"] == "Global" && location.pathname.split("/")[1] == ""){
                     link.style.backgroundColor = "rgb(49, 53, 54)";
                 }
     
@@ -71,16 +68,28 @@ function get_rooms(){
                     let image = document.createElement("img");
                     image.src = "static/settings.png";
                     image.width = 20;
+
+                    settings.onclick = () => {
+                        if (document.getElementById("room-settings").style.display == "none"){
+                            document.getElementById("room-settings").style.display = "block";
+                            document.getElementById("room-settings").querySelector("h3").textContent = room["name"] + " chat";
+                        } else document.getElementById("room-settings").style.display = "none";
+                    }
+
                     settings.innerHTML = image.outerHTML;
                     document.getElementById("rooms").lastChild.style.display = "inline-block";
-                    document.getElementById("rooms").lastChild.style.marginLeft = "20%";
-                    document.getElementById("rooms").lastChild.style.paddingRight = "20%";
                     $("#rooms").append(settings);
-                } else console.log(room["creator"]);
+                    $("#rooms").append(document.createElement("br"));
+                }
             });
             $("#rooms").append('<button onclick="new_room()"> + </button>');
         });
     });
+}
+
+function delete_room(){
+    socket.emit("delete-room", document.getElementById("room-settings").querySelector("h3").textContent.split(" ")[0]);
+    window.location.replace("/");
 }
 
 function new_room(){
@@ -129,7 +138,7 @@ function send_message(event){
         document.getElementById("usernamedisplay").innerHTML = username;
     
         const data = formdatatodict(formdata);
-        
+
         let upload = true;
     
         if (upload == true){
@@ -138,7 +147,7 @@ function send_message(event){
     
             const image = formdata.get("image");
     
-            if (image && image.type.startsWith("image/")) {
+            if (image && image.type.startsWith("image/") || image && image.type.startsWith("video/") || image && image.type.startsWith("audio/")) {
             socket.emit("new-image", {"image": image, "filename": data["image"]});
             }
         }
@@ -168,20 +177,26 @@ $(document).ready(function() {
     $("#inlog").on("submit", function(event){
         event.preventDefault();
 
-        socket.emit("login-attempt", formdatatodict(new FormData($("#inlog")[0])));
-    });
+        fetch("/login-attempt", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(formdatatodict(new FormData($("#inlog")[0])))
+        })
+        .then (response => response.json())
+        .then (data => {
+            if (data.status == "login-sucess"){
+                location.reload();
 
-    socket.on("login-sucess", function(username){
-        console.log(username);
+                document.getElementById("login").close();
+                document.getElementById("account-bar").style.display = "none";
 
-        document.getElementById("login").close();
-        document.getElementById("account-bar").style.display = "none";
-
-        document.getElementById("usernamedisplay").innerHTML = username;
-    });
-
-    socket.on("login-fail", function(){
-        alert("Wrong Login Credentials");
+                document.getElementById("usernamedisplay").innerHTML = data.username;
+            } else if (data.status == "login-fail"){
+                alert("Wrong Login Credentials");
+            }
+        })
     });
 
     $("#accountcreate").on("submit", function(event){

@@ -5,15 +5,17 @@ from json import load
 from account_creation import check_for_email_func, email_confirm_func, confirm_code_func, check_for_username_func, create_account_func
 from account_login import login_attempt_func, get_username_func
 from get_endpoints import get_messages_endpoint, get_image_endpoint, get_rooms_endpoint
-from post_endpoints import new_room_endpoint, new_image_endpoint, post_endpoint
+from post_endpoints import new_room_endpoint, delete_room_endpoint, new_image_endpoint, post_endpoint
 from dotenv import load_dotenv
+from datetime import timedelta
 
 app = Flask(__name__)
 
 load_dotenv()
 app.config["SECRET_KEY"] = getenv("SECRET_KEY")
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=1)
 
-socket = SocketIO(app, max_http_buffer_size=500000000) #5mb
+socket = SocketIO(app, max_http_buffer_size=500000000, manage_session=False) #5mb
 
 @socket.on("establish_relation")
 def on_join(data):
@@ -24,8 +26,8 @@ def on_join(data):
         join_room(data.get("room"))
         print("connection established with " + data.get("room"))
 
-@socket.on("login-attempt")
-def login_attempt(data): login_attempt_func(data, socket)
+@app.route("/login-attempt", methods=["POST"])
+def login_attempt(): return login_attempt_func()
 
 @socket.on("get-username")
 def get_username(): return get_username_func()
@@ -87,6 +89,9 @@ def new_image(image): return new_image_endpoint(image)
 
 @socket.on("new-room")
 def new_room(data): return new_room_endpoint(data)
+
+@socket.on("delete-room")
+def delete_room(data): return delete_room_endpoint(data)
 
 if __name__ == "__main__":
     #socket.run(app, debug=False, allow_unsafe_werkzeug, host="0.0.0.0") # public

@@ -1,5 +1,6 @@
 from json import dump, load
-from os import path
+from os import path, remove
+from flask import session, redirect, url_for
 
 def update_file(file, data):
     file.seek(0)
@@ -11,10 +12,15 @@ def new_room_endpoint(data) -> str:
 
     if not path.exists(f"boards/{room_name}.json"):
         with open(f"boards/{room_name}.json", "w") as file:
-            data = {"messages": []}
+            data = {"creator": session.get("login", "Anon"), "messages": []}
             dump(data, file, indent=4)
     
     return room_name
+
+def delete_room_endpoint(data) -> str:
+    remove(f"boards/{data}.json")
+
+    return ""
 
 def new_image_endpoint(image) -> str:
     image_file = image.get("image")

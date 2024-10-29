@@ -26,7 +26,9 @@ def get_image_endpoint():
     filename : str
     filename = str(request.args.get("filename"))
 
-    return send_file(path.join("Images", filename), mimetype="image/jpeg")
+    print(path.join("Images", filename))
+
+    return send_file(path.join("Images", filename))
 
 def get_rooms_endpoint():
     names = [path.join(boards, f) for f in listdir(boards) if path.isfile(path.join(boards, f))]
@@ -43,8 +45,6 @@ def get_rooms_endpoint():
     for i, v in enumerate(names):
         split = v.split(".")
         names[i] = split[0]
-
-    names.remove("Global")
 
     data = []
 
